@@ -5,7 +5,7 @@
     <meta charset='utf-8'>
     <title>Ex3</title>
     <script>function getlevel(){
-        if(document.getElementById('word').value == "test"){document.cookie = "yuki=True; path=/;";}else{
+        if(document.getElementById('word').value == "KJ4677"){document.cookie = "yuki=True; path=/;";}else{
         let req = new XMLHttpRequest();
         req.addEventListener("load", function(){document.getElementById('info').textContent = this.responseText});
         req.open("GET", "/answer?q="+document.getElementById('word').value);
@@ -31,7 +31,7 @@
     <input id="word" type="password"></input>
     <span id="buttonEye" class="fa fa-eye" onclick="pushHideButton()"></span>
     <span id="eyeText" onclick="pushHideButton()"></span>&nbsp;&nbsp;
-    <input type="button" onClick="getlevel()" value="確認" ></input>
+    <input type="button" onClick="getlevel()" value="確認"></input>
     <div id="info">
 </body>
 </html>

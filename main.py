@@ -12,7 +12,7 @@ max_api_wait_time = 3
 max_time = 10
 apis = [r"https://youtube.076.ne.jp/",r"https://vid.puffyan.us/",r"https://inv.riverside.rocks/",r"https://invidio.xamh.de/",r"https://y.com.sb/",r"https://invidious.sethforprivacy.com/",r"https://invidious.tiekoetter.com/",r"https://inv.bp.projectsegfau.lt/",r"https://inv.vern.cc/",r"https://invidious.nerdvpn.de/",r"https://inv.privacy.com.de/",r"https://invidious.rhyshl.live/",r"https://invidious.slipfox.xyz/",r"https://invidious.weblibre.org/",r"https://invidious.namazso.eu/",r"https://invidious.jing.rocks"]
 url = requests.get(r'https://raw.githubusercontent.com/mochidukiyukimi/yuki-youtube-instance/main/instance.txt').text.rstrip()
-version = "1.0"
+version = "1.6"
 
 apichannels = []
 apicomments = []
@@ -138,12 +138,6 @@ def get_comments(videoid):
 def get_replies(videoid,key):
     t = json.loads(apicommentsrequest(fr"api/v1/comments/{videoid}?hmac_key={key}&hl=jp&format=html"))["contentHtml"]
 
-def get_level(word):
-    for i1 in range(1,13):
-        with open(f'Level{i1}.txt', 'r', encoding='UTF-8', newline='\n') as f:
-            if word in [i2.rstrip("\r\n") for i2 in f.readlines()]:
-                return i1
-    return 0
 
 
 def check_cokie(cookie):
@@ -259,9 +253,13 @@ def thumbnail(v:str):
 
 @app.get("/bbs",response_class=HTMLResponse)
 def view_bbs(request: Request,name: Union[str, None] = "",seed:Union[str,None]="",channel:Union[str,None]="main",verify:Union[str,None]="false",yuki: Union[str] = Cookie(None)):
-    if not(check_cokie(yuki)):
-        return redirect("/")
-    res = HTMLResponse(requests.get(fr"{url}bbs?name={urllib.parse.quote(name)}&seed={urllib.parse.quote(seed)}&channel={urllib.parse.quote(channel)}&verify={urllib.parse.quote(verify)}",cookies={"yuki":"True"}).text)
+    # res = HTMLResponse(requests.get(fr"{url}bbs?name={urllib.parse.quote(name)}&seed={urllib.parse.quote(seed)}&channel={urllib.parse.quote(channel)}&verify={urllib.parse.quote(verify)}",cookies={"yuki":"True"}).text)
+    return template("bbs.html",{"request":request})
+    #return res
+
+@app.get("/bbs/info",response_class=HTMLResponse)
+def view_bbs(request: Request,name: Union[str, None] = "",seed:Union[str,None]="",channel:Union[str,None]="main",verify:Union[str,None]="false",yuki: Union[str] = Cookie(None)):
+    res = HTMLResponse(requests.get(fr"{url}bbs/info").text)
     return res
 
 @cache(seconds=5)
@@ -274,9 +272,8 @@ def view_bbs(request: Request,t: str,channel:Union[str,None]="main",verify: Unio
     return bbsapi_cached(verify,channel)
 
 @app.get("/bbs/result")
-def write_bbs(request: Request,name: str = "",message: str = "",seed:Union[str,None] = "",channel:Union[str,None]="main",verify:Union[str,None]="false",yuki: Union[str] = Cookie(None)):
-    if not(check_cokie(yuki)):
-        return redirect("/")
+def write_bbs(request: Request,name: str = "",message: str = "",seed:Union[str,None] = "",channel:Union[str,None]="main",verify:Union[str,None]="false"):
+    print(get_info(request))
     t = requests.get(fr"{url}bbs/result?name={urllib.parse.quote(name)}&message={urllib.parse.quote(message)}&seed={urllib.parse.quote(seed)}&channel={urllib.parse.quote(channel)}&verify={urllib.parse.quote(verify)}&info={urllib.parse.quote(get_info(request))}",cookies={"yuki":"True"}, allow_redirects=False)
     if t.status_code != 307:
         return HTMLResponse(t.text)
@@ -288,9 +285,23 @@ def how_cached():
 
 @app.get("/bbs/how",response_class=PlainTextResponse)
 def view_commonds(request: Request,yuki: Union[str] = Cookie(None)):
-    if not(check_cokie(yuki)):
-        return redirect("/")
     return how_cached()
+
+@app.get("/about", response_class=PlainTextResponse)
+def view_about(request: Request, yuki: Union[str] = Cookie(None)):
+    response = requests.get("https://raw.githubusercontent.com/beta9514/about/main/ex1_about.txt")
+    html_content = response.text
+    return html_content
+
+@app.get("/forms",response_class=HTMLResponse)
+def view_forms(request: Request, yuki: Union[str] = Cookie(None)):
+    return template("forms.html",{"request":request})
+
+@app.get("/schedule", response_class=PlainTextResponse)
+def view_schedule(request: Request, yuki: Union[str] = Cookie(None)):
+    response = requests.get("https://raw.githubusercontent.com/beta9514/other/main/ex1_schedule.txt")
+    html_content = response.text
+    return html_content
 
 @app.get("/load_instance")
 def home():

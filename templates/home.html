@@ -2,7 +2,7 @@
 <html lang="ja">
 
 <head>
-    <title>連番を簡単に生成！！</title>
+    <title>HOME</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="/css/empty.css">
     <link rel="stylesheet" href="/css/pure-min.css">
@@ -12,12 +12,20 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <style>
+        .clock {
+            font-size: 60px;
+            text-align: center;
+            color: #3c3c3c;
+        }
+    </style>
 </head>
 
     <body class="no-theme">
         <div class="pure-g h-box" id="search-widget">
             <div class="pure-u-1" id="logo">
                 <h1 href="/" class="pure-menu-heading">Yuki Youtube</h1>
+                <div class="clock"></div>
             <a href="/bbs">掲示板</a>&nbsp;&nbsp;<a href="/ex3about">about</a>
             </div>
             <div class="pure-u-1-4"></div>
@@ -41,7 +49,20 @@
                 response(JSON.parse(xhr.responseText));
             }
             xhr.send();
-        }},delay:300});</script>
+        }},delay:300});
+        
+        function displayTime() {
+            const padZero = value => value.toString().padStart(2, '0');
+            const now = new Date();
+            const h = padZero(now.getHours());
+            const m = padZero(now.getMinutes());
+            const s = padZero(now.getSeconds());
+            const currentTime = `${h}:${m}:${s}`;
+            document.querySelector('.clock').textContent = currentTime; 
+        }
+        displayTime();
+        setInterval(displayTime, 1000);
+        </script>
     </body>
 
 </html>

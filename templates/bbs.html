@@ -117,13 +117,15 @@
         <option value="" selected>コマンドセレクタ</option>
         <option value="/del ">/del</option>
         <option value="/destroy ">/destroy</option>
-        <option value="disself">/disself</option>
+        <option value="/disself">/disself</option>
         <option value="/speaker ">/speaker</option>
         <option value="/disspeaker ">/disspeaker</option>
         <option value="/manager ">/manager</option>
         <option value="/dismanager ">/dismanager</option>
         <option value="/moderator ">/moderator</option>
         <option value="/dismoderator ">/dismoderator</option>
+        <option value="/restrict">/restrict</option>
+        <option value="/release">/release</option>
         <option value="/stop ">/stop</option>
         <option value="/kill ">/kill</option>
         <option value="/ban ">/ban</option>
@@ -291,6 +293,23 @@
         }, 2000);
       });
       
+      document.getElementById('messageselect').addEventListener('change', function() {
+            var textbox = document.getElementById('msg');
+            if (this.value === '時報お疲れ様' || this.value === 'じほおつ' || this.value === 'ぬ') {
+                textbox.removeAttribute('required');
+            } else {
+                textbox.setAttribute('required', 'required');
+            }
+        });
+
+        document.getElementById('command').addEventListener('change', function() {
+            var textbox = document.getElementById('msg');
+            if (this.value === '/disself' || this.value === '/restrict' || this.value === '/release') {
+                textbox.removeAttribute('required');
+            } else {
+                textbox.setAttribute('required', 'required');
+            }
+        });
     </script>
   </body>
 </html>

@@ -14,23 +14,18 @@
     function pushHideButton() {
         var txtPass = document.getElementById("word");
         var btnEye = document.getElementById("buttonEye");
-        var eyeText = document.getElementById("eyeText");
-
         if (txtPass.type === "text") {
         txtPass.type = "password";
         btnEye.className = "fa fa-eye";
-        eyeText.textContent = "";
         } else {
         txtPass.type = "text";
         btnEye.className = "fa fa-eye-slash";
-        eyeText.textContent = "";
         }
     }
     </script>
 </head>
     <input id="word" type="password"></input>
     <span id="buttonEye" class="fa fa-eye" onclick="pushHideButton()"></span>
-    <span id="eyeText" onclick="pushHideButton()"></span>&nbsp;&nbsp;
     <input type="button" onClick="getlevel()" value="確認"></input>
     <div id="info">
 </body>

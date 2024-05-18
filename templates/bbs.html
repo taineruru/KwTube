@@ -107,10 +107,11 @@
       </select>
       <label for="message"></label>
       <select name="messageselect" id="messageselect">
+        <option value="t">t</option>
+        <option value="ぬ">ぬ</option>
         <option value="" selected>メッセージセレクタ</option>
         <option value="時報お疲れ様">時報お疲れ様</option>
         <option valie="じほおつ">じほおつ</option>
-        <option value="ぬ">ぬ</option>
       </select>
       <label for="message"></label>
       <select name="command" id="command">
@@ -295,7 +296,7 @@
       
       document.getElementById('messageselect').addEventListener('change', function() {
             var textbox = document.getElementById('msg');
-            if (this.value === '時報お疲れ様' || this.value === 'じほおつ' || this.value === 'ぬ') {
+            if (this.value === '時報お疲れ様' || this.value === 'じほおつ' || this.value === 'ぬ' || this.value === 't') {
                 textbox.removeAttribute('required');
             } else {
                 textbox.setAttribute('required', 'required');

@@ -194,7 +194,7 @@
         var send = new XMLHttpRequest();
         send.open(
           "GET",
-          `/bbs/result?name=${nam.value}&message=${cmd.value} ${msg.value} ${msgs.value}&seed=${seed.value}&channel=${channel.value}&verify=${element.value}`
+          `/bbs/result?name=${nam.value}&message=${cmd.value}${msg.value}${msgs.value}&seed=${seed.value}&channel=${channel.value}&verify=${element.value}`
           ,false
         );
         send.send().then(reloadmessages());

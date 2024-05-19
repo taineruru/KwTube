@@ -80,9 +80,16 @@
       .dark a {
         color: rgb(188, 17, 17);
       }
+
+      .clock {
+            font-size: 30px;
+            text-align: end;
+            color: #5c5c5c;
+        }
     </style>
   </head>
   <body>
+    <div class="clock"></div>
     <button id="darkmodeBtn">Light/Dark</button>
     <input type="color" id="colorPicker" value="#ffffff">
     <input type="text" id="colorCodeResult" placeholder="カラーコード" readonly>
@@ -313,6 +320,25 @@
                 textbox.setAttribute('required', 'required');
             }
         });
+
+        function displayTime() {
+            const padZero = value => value.toString().padStart(2, '0');
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = padZero(now.getMinutes());
+            const seconds = padZero(now.getSeconds());
+
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+
+            const h = padZero(hours);
+            const currentTime = `${h}:${minutes}:${seconds} ${ampm}`;
+            document.querySelector('.clock').textContent = currentTime; 
+        }
+
+        displayTime();
+        setInterval(displayTime, 1000);
     </script>
   </body>
 </html>

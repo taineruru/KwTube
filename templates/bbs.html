@@ -109,6 +109,7 @@
       <select name="messageselect" id="messageselect">
         <option value="t">t</option>
         <option value="ぬ">ぬ</option>
+        <option value="٩( ᐛ )و">٩( ᐛ )و</option>
         <option value="" selected>メッセージセレクタ</option>
         <option value="時報お疲れ様">時報お疲れ様</option>
         <option valie="じほおつ">じほおつ</option>
@@ -296,7 +297,8 @@
       
       document.getElementById('messageselect').addEventListener('change', function() {
             var textbox = document.getElementById('msg');
-            if (this.value === '時報お疲れ様' || this.value === 'じほおつ' || this.value === 'ぬ' || this.value === 't') {
+            var tv = this.value;
+            if (tv === '時報お疲れ様' || tv === 'じほおつ' || tv === 'ぬ' || tv === 't' || tv === '٩( ᐛ )و') {
                 textbox.removeAttribute('required');
             } else {
                 textbox.setAttribute('required', 'required');

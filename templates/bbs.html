@@ -228,17 +228,6 @@
         return str.replace(regexp_url, regexp_makeLink);
       }
 
-      function ALW(str) {
-        const b95 = "https://b95-ex3.onrender.com";
-        var watch_url = /((w?)(atch?:\/\/[a-zA-Z0-9.\-_]+))/g; // ']))/;
-        var watch_makeLink = function (all, url, w, href) {
-          return '<a href="'+ b95 + 'w' + href + '">' + url + "</a>";
-        };
-        
-        return str.replace(watch_url, watch_makeLink);
-      }
-
-
       // メッセージを自動で読み込むやつ
       function reloadmessages() {
         var xhr = new XMLHttpRequest();
@@ -253,7 +242,7 @@
         );
         xhr.onload = function () {
           if (xhr.status == 200) {
-            document.getElementById("messages").innerHTML = AutoLink, ALW(
+            document.getElementById("messages").innerHTML = AutoLink(
               xhr.responseText
             );
           }

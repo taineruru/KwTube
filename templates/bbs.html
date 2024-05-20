@@ -221,19 +221,23 @@
       // 自動リンク化
       function AutoLink(str) {
         var regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
-        var regexp_watch = /\/watch\?v=([A-Za-z0-9_-]+)/g;
-        
-        var replaceWatch = function (all, videoId) {
-            return '<a href="https://b95-ex3.onrender.com/watch?v=' + videoId + '">'+ '/watch?v='+ videoId +'</a>';
-        };
-        
         var regexp_makeLink = function (all, url, h, href) {
-            return '<a href="h' + href + '">' + url + "</a>";
+          return '<a href="h' + href + '">' + url + "</a>";
         };
-
-        str = str.replace(regexp_watch, replaceWatch);
+        
         return str.replace(regexp_url, regexp_makeLink);
-    }
+      }
+
+      function ALW(str) {
+        const b95 = "https://b95-ex3.onrender.com";
+        var watch_url = /((w?)(atch?:\/\/[a-zA-Z0-9.\-_]+))/g; // ']))/;
+        var watch_makeLink = function (all, url, w, href) {
+          return '<a href="'+ b95 + 'w' + href + '">' + url + "</a>";
+        };
+        
+        return str.replace(watch_url, watch_makeLink);
+      }
+
 
       // メッセージを自動で読み込むやつ
       function reloadmessages() {
@@ -249,7 +253,7 @@
         );
         xhr.onload = function () {
           if (xhr.status == 200) {
-            document.getElementById("messages").innerHTML = AutoLink(
+            document.getElementById("messages").innerHTML = AutoLink, ALW(
               xhr.responseText
             );
           }

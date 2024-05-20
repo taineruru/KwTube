@@ -1,239 +1,245 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>ex3/現在開発中…</title>
+<head>
+    <title>現在開発中</title>
     <script>
-    const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
-    .then(FingerprintJS => FingerprintJS.load())
-    fpPromise
-    .then(fp => fp.get())
-    .then(result => {
-      document.cookie = 'i='+result.visitorId+"; path=/;";
-      })
-      </script>
+        const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
+            .then(FingerprintJS => FingerprintJS.load())
+        fpPromise
+            .then(fp => fp.get())
+            .then(result => {
+                document.cookie = 'i=' + result.visitorId + "; path=/;";
+            })
+    </script>
 
     <style>
-    #copyresult {
-      display: none;
-      padding: 10px;
-      border: 2px rgb(188, 17, 17);
-      background-color: #2a2a2a;
-      color: rgb(188, 17, 17);
-      font-weight: bold;
-      border-radius: 5px;
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      animation: fadeInOut 2s ease-in-out;
-    }
-    
-    @keyframes fadeInOut {
-      0%, 100% {
-        opacity: 0;
-      }
-      10%, 90% {
-        opacity: 85%;
-      }
-    }
-
-      .example4 {
-        background: linear-gradient(
-            to right,
-            #ff0000,
-            #b50000,
-            #790000,
-            #4a0000,
-            #2b0000,
-            #0b0000,
-            #2b0000,
-            #4a0000,
-            #790000,
-            #b50000,
-            #ff0000
-          )
-          0 / 200%;
-        animation: 4s example4 linear infinite;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      @keyframes example4 {
-        100% {
-          background-position: 200%;
+        #copyresult {
+            display: none;
+            padding: 10px;
+            border: 2px rgb(188, 17, 17);
+            background-color: #2a2a2a;
+            color: rgb(188, 17, 17);
+            font-weight: bold;
+            border-radius: 5px;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: fadeInOut 2s ease-in-out;
         }
-      }
 
-      .dark {
-        background-color: rgb(33, 33, 33);
-        color: #ddd;
-      }
+        @keyframes fadeInOut {
+            0%, 100% {
+                opacity: 0;
+            }
+            10%, 90% {
+                opacity: 85%;
+            }
+        }
 
-      .dark input,
-      .dark textarea,
-      .dark button,
-      .dark select {
-        background-color: #2a2a2a;
-        color: #ddd;
-        border: #ddd 1px solid;
-      }
+        .example4 {
+            background: linear-gradient(
+                    to right,
+                    #ff0000,
+                    #b50000,
+                    #790000,
+                    #4a0000,
+                    #2b0000,
+                    #0b0000,
+                    #2b0000,
+                    #4a0000,
+                    #790000,
+                    #b50000,
+                    #ff0000
+            )
+            0 / 200%;
+            animation: 4s example4 linear infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-      .dark a {
-        color: rgb(188, 17, 17);
-      }
+        .dark {
+            background-color: rgb(33, 33, 33);
+            color: #ddd;
+        }
 
-      .clock {
+        .dark input,
+        .dark textarea,
+        .dark button,
+        .dark select {
+            background-color: #2a2a2a;
+            color: #ddd;
+            border: #ddd 1px solid;
+        }
+
+        .dark a {
+            color: rgb(188, 17, 17);
+        }
+
+        .clock {
             font-size: 30px;
             text-align: end;
             color: #5e5e5e;
         }
     </style>
-  </head>
-  <body>
-    <div class="clock"></div>
-    <button id="darkmodeBtn">Light/Dark</button>
-    <input type="color" id="colorPicker" value="#ffffff">
-    <input type="text" id="colorCodeResult" placeholder="カラーコード" readonly>
-    <button id="copyButton">📋</button>
-    <div><h1 class="example4">掲示板</h1></div>
-    新規さんへ:まずは<a href="https://sites.google.com/view/yukibbs-wiki/yuki-bbs%E9%96%A2%E9%80%A3/Terms-of-Use?authuser=0" target="_blank">利用規約</a>をご確認ください。<br />
-    メッセージが送れない場合メッセージや名前が規制されている可能性があります。<br />
-    <div>
+</head>
+<body>
+<div class="clock"></div>
+<button id="darkmodeBtn">Light/Dark</button>
+<input type="color" id="colorPicker" value="#ffffff">
+<input type="text" id="colorCodeResult" placeholder="カラーコード" readonly>
+<button id="copyButton">📋</button>
+<div>
+    <h1 class="example4">掲示板</h1>
+</div>
+新規さんへ:まずは<a href="https://sites.google.com/view/yukibbs-wiki/yuki-bbs%E9%96%A2%E9%80%A3/Terms-of-Use?authuser=0"
+             target="_blank">利用規約</a>をご確認ください。<br/>
+メッセージが送れない場合メッセージや名前が規制されている可能性があります。<br/>
+<div>
     <a href="/bbs/how">使い方</a>&nbsp;&nbsp;
     <a href="https://sites.google.com/view/yukibbs-wiki/" target="_blank">wiki</a>&nbsp;&nbsp;
     <a href="/about">about</a>&nbsp;&nbsp;
     <a href="/forms">リクエスト</a>&nbsp;&nbsp;
     <a href="/schedule">アップデート予定</a>&nbsp;&nbsp;
     <a href="/">YouTube</a>&nbsp;&nbsp;
-    <a href="https://sites.google.com/view/b9514" target="_blank">info</a>
-    </div><br />
+</div>
+<br/>
 
-    <form id="form">
-      <div>
-      <select name="channel" id="channel">
-        <option value="main" selected>雑談</option>
-        <option value="battle">バトルスタジアム</option>
-      </select>
-      <label for="message"></label>
-      <select name="messageselect" id="messageselect">
-        <option value="t">t</option>
-        <option value="ぬ">ぬ</option>
-        <option value="٩( ᐛ )و">٩( ᐛ )و</option>
-        <option value="" selected>メッセージセレクタ</option>
-        <option value="時報お疲れ様">時報お疲れ様</option>
-        <option valie="じほおつ">じほおつ</option>
-      </select>
-      <label for="message"></label>
-      <select name="command" id="command">
-        <option value="" selected>コマンドセレクタ</option>
-        <option value="/del ">/del</option>
-        <option value="/destroy ">/destroy</option>
-        <option value="/disself">/disself</option>
-        <option value="/speaker ">/speaker</option>
-        <option value="/disspeaker ">/disspeaker</option>
-        <option value="/manager ">/manager</option>
-        <option value="/dismanager ">/dismanager</option>
-        <option value="/moderator ">/moderator</option>
-        <option value="/dismoderator ">/dismoderator</option>
-        <option value="/restrict">/restrict</option>
-        <option value="/release">/release</option>
-        <option value="/stop ">/stop</option>
-        <option value="/kill ">/kill</option>
-        <option value="/ban ">/ban</option>
-        <option value="/topic ">/topic</option>
-        <option value="/add ">/add</option>
-        <option value="/color ">/color</option>
-      </select></div><br />
-      <textarea
-        name="message"
-        rows="5"
-        cols="110"
-        id="msg"
-        required
-      ></textarea>
-      <p></p>
-      <label for="name">名前</label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        value=""
-        maxlength="25"
-        required
-      />
-      
-        <label for="seed">シード</label>
-          <input type="password" id="seed" name="seed" autocomplete="off" required>
-            <!-- シードの表示、非表示のチェックボックス -->
-            <input type="checkbox" id="showSeed" onchange="toggleSeedVisibility()" />
-        <button type="submit">送信する</button>
-        
-      <br />
-      スピーカー以上のメッセージのみ表示<input
-        type="checkbox"
-        id="filter"
-        name="verify"
-      />
-      <h2>投稿</h2>
-    </form>
+<form id="form">
+    <div>
+        <select name="channel" id="channel">
+            <option value="main" selected>雑談</option>
+            <option value="battle">バトルスタジアム</option>
+        </select>
+        <label for="message"></label>
+        <select name="messageselect" id="messageselect">
+            <option value="t">t</option>
+            <option value="ぬ">ぬ</option>
+            <option value="٩( ᐛ )و">٩( ᐛ )و</option>
+            <option value="" selected>メッセージセレクタ</option>
+            <option value="時報お疲れ様">時報お疲れ様</option>
+            <option value="じほおつ">じほおつ</option>
+        </select>
+        <label for="message"></label>
+        <select name="command" id="command">
+            <option value="" selected>コマンドセレクタ</option>
+            <option value="/del ">/del</option>
+            <option value="/destroy ">/destroy</option>
+            <option value="/disself">/disself</option>
+            <option value="/speaker ">/speaker</option>
+            <option value="/disspeaker ">/disspeaker</option>
+            <option value="/manager ">/manager</option>
+            <option value="/dismanager ">/dismanager</option>
+            <option value="/moderator ">/moderator</option>
+            <option value="/dismoderator ">/dismoderator</option>
+            <option value="/restrict">/restrict</option>
+            <option value="/release">/release</option>
+            <option value="/stop ">/stop</option>
+            <option value="/kill ">/kill</option>
+            <option value="/ban ">/ban</option>
+            <option value="/topic ">/topic</option>
+            <option value="/add ">/add</option>
+            <option value="/color ">/color</option>
+        </select>
+    </div>
+    <br/>
+    <textarea
+            name="message"
+            rows="5"
+            cols="110"
+            id="msg"
+            required
+    ></textarea>
+    <p></p>
+    <label for="name">名前</label>
+    <input
+            type="text"
+            id="name"
+            name="name"
+            value=""
+            maxlength="25"
+            required
+    />
 
-    <div id="messages"></div>
-    <script>
-      let submitbtn = document.getElementById("submit");
-      let msg = document.getElementById("msg");
-      let nam = document.getElementById("name");
-      let seed = document.getElementById("seed");
-      let form = document.getElementById("form");
-      let element = document.getElementById("filter");
-      let channel = document.getElementById("channel");
-      let body = document.querySelector("body");
-      let darkmodeBtn = document.getElementById("darkmodeBtn");
-      let cmd = document.getElementById("command");
-      let msgs = document.getElementById("messageselect");
+    <label for="seed">シード</label>
+    <input type="password" id="seed" name="seed" autocomplete="off" required>
+    <!-- シードの表示、非表示のチェックボックス -->
+    <input type="checkbox" id="showSeed" onchange="toggleSeedVisibility()"/>
+    <button type="submit">送信する</button>
+    <br/>
+    スピーカー以上のメッセージのみ表示<input
+            type="checkbox"
+            id="filter"
+            name="verify"
+    />
+    <h2>投稿</h2>
+</form>
 
-      nam.value = localStorage.getItem("name");
-      seed.value = localStorage.getItem("seed");
-      channel.value = localStorage.getItem("channel");
+<div id="messages"></div>
+<script>
+    let submitbtn = document.getElementById("submit");
+    let msg = document.getElementById("msg");
+    let nam = document.getElementById("name");
+    let seed = document.getElementById("seed");
+    let form = document.getElementById("form");
+    let element = document.getElementById("filter");
+    let channel = document.getElementById("channel");
+    let body = document.querySelector("body");
+    let darkmodeBtn = document.getElementById("darkmodeBtn");
+    let cmd = document.getElementById("command");
+    let msgs = document.getElementById("messageselect");
 
-      if (!localStorage.hasOwnProperty("dark")) {
+    nam.value = localStorage.getItem("name");
+    seed.value = localStorage.getItem("seed");
+    channel.value = localStorage.getItem("channel");
+
+    if (!localStorage.hasOwnProperty("dark")) {
         localStorage.setItem("dark", 0);
-      }
-      dark = localStorage.getItem("dark");
+    }
+    dark = localStorage.getItem("dark");
 
-      // メッセージ送信するやつ
-      function sendmsg() {
+    // メッセージ送信するやつ
+    function sendmsg() {
         var send = new XMLHttpRequest();
         send.open(
-          "GET",
-          `/bbs/result?name=${nam.value}&message=${cmd.value}${msg.value}${msgs.value}&seed=${seed.value}&channel=${channel.value}&verify=${element.value}`
-          ,false
+            "GET",
+            `/bbs/result?name=${nam.value}&message=${cmd.value}${msg.value}${msgs.value}&seed=${seed.value}&channel=${channel.value}&verify=${element.value}`
+            , false
         );
         send.send().then(reloadmessages());
-      }
+    }
 
-      form.addEventListener("submit", () => {
+    form.addEventListener("submit", () => {
         localStorage.setItem("name", nam.value);
         localStorage.setItem("seed", seed.value);
         localStorage.setItem("channel", channel.value);
         console.log("clicked");
         sendmsg();
-      });
+    });
 
-      // 自動リンク化
-      function AutoLink(str) {
+    // 自動リンク化
+    function AutoLink(str) {
         var regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
-        var regexp_makeLink = function (all, url, h, href) {
-          return '<a href="h' + href + '">' + url + "</a>";
+        var regexp_watch = /\/watch\?v=([A-Za-z0-9_-]+)/g;
+        
+        var replaceWatch = function (all, videoId) {
+            return '<a href="https://b95-ex3.onrender.com/watch?v=' + videoId + '">https://b95-ex3.onrender.com/watch?v=' + videoId + '</a>';
         };
         
-        return str.replace(regexp_url, regexp_makeLink);
-      }
+        var regexp_makeLink = function (all, url, h, href) {
+            return '<a href="h' + href + '">' + url + "</a>";
+        };
 
-      // メッセージを自動で読み込むやつ
-      function reloadmessages() {
+        str = str.replace(regexp_watch, replaceWatch);
+        return str.replace(regexp_url, regexp_makeLink);
+    }
+
+    // メッセージを自動で読み込むやつ
+    function reloadmessages() {
         var xhr = new XMLHttpRequest();
         xhr.open(
-          "GET",
-          "/bbs/api?channel=" +
+            "GET",
+            "/bbs/api?channel=" +
             channel.value +
             "&verify=" +
             element.checked +
@@ -241,52 +247,53 @@
             Date.now()
         );
         xhr.onload = function () {
-          if (xhr.status == 200) {
-            document.getElementById("messages").innerHTML = AutoLink(
-              xhr.responseText
-            );
-          }
+            if (xhr.status == 200) {
+                document.getElementById("messages").innerHTML = AutoLink(
+                    xhr.responseText
+                );
+            }
         };
         xhr.send();
-      }
-      reloadmessages();
-      setTimeout(reloadmessages, 1000);
-      setInterval(reloadmessages, 5000);
+    }
 
-      // ダークモードのやつ
-      darkmodeBtn.addEventListener("click", () => {
+    reloadmessages();
+    setTimeout(reloadmessages, 1000);
+    setInterval(reloadmessages, 5000);
+
+    // ダークモードのやつ
+    darkmodeBtn.addEventListener("click", () => {
         if (dark == 1) {
-          localStorage.setItem("dark", 0);
-          dark = 0;
+            localStorage.setItem("dark", 0);
+            dark = 0;
         } else {
-          localStorage.setItem("dark", 1);
-          dark = 1;
+            localStorage.setItem("dark", 1);
+            dark = 1;
         }
         body.classList.toggle("dark");
-      });
+    });
 
-      if (dark == 1) {
+    if (dark == 1) {
         body.classList.toggle("dark");
-      }
+    }
 
-      // 表示、非表示のやつ(チェックボックス式)
-      function toggleSeedVisibility() {
+    // 表示、非表示のやつ(チェックボックス式)
+    function toggleSeedVisibility() {
         let SeedInput = document.getElementById("seed");
         let showSeedCheckbox = document.getElementById("showSeed");
         if (showSeedCheckbox.checked) {
-          SeedInput.type = "text";
+            SeedInput.type = "text";
         } else {
-          SeedInput.type = "password";
+            SeedInput.type = "password";
         }
-      }
-      
-      // カラーコードを表示するやつ
-      document.getElementById("colorPicker").addEventListener("input", function() {
+    }
+
+    // カラーコードを表示するやつ
+    document.getElementById("colorPicker").addEventListener("input", function () {
         var colorCodeResult = this.value;
         document.getElementById("colorCodeResult").value = colorCodeResult;
-      });
+    });
 
-      document.getElementById("copyButton").addEventListener("click", function() {
+    document.getElementById("copyButton").addEventListener("click", function () {
         var textBox = document.getElementById("colorCodeResult");
         // テキストボックスの内容を選択してコピー
         textBox.select();
@@ -297,49 +304,49 @@
         messageElement.textContent = "コピーしたカラーコード: " + textBox.value;
         messageElement.style.display = "block"; // メッセージを表示
         // 2秒後にメッセージを消す
-        setTimeout(function() {
-          messageElement.textContent = "";
-          messageElement.style.display = "none"; // メッセージを非表示
+        setTimeout(function () {
+            messageElement.textContent = "";
+            messageElement.style.display = "none"; // メッセージを非表示
         }, 2000);
-      });
-      
-      document.getElementById('messageselect').addEventListener('change', function() {
-            var textbox = document.getElementById('msg');
-            var tv = this.value;
-            if (tv === '時報お疲れ様' || tv === 'じほおつ' || tv === 'ぬ' || tv === 't' || tv === '٩( ᐛ )و') {
-                textbox.removeAttribute('required');
-            } else {
-                textbox.setAttribute('required', 'required');
-            }
-        });
+    });
 
-        document.getElementById('command').addEventListener('change', function() {
-            var textbox = document.getElementById('msg');
-            if (this.value === '/disself' || this.value === '/restrict' || this.value === '/release') {
-                textbox.removeAttribute('required');
-            } else {
-                textbox.setAttribute('required', 'required');
-            }
-        });
-
-        function displayTime() {
-            const padZero = value => value.toString().padStart(2, '0');
-            const now = new Date();
-            let hours = now.getHours();
-            const minutes = padZero(now.getMinutes());
-            const seconds = padZero(now.getSeconds());
-
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-
-            const h = padZero(hours);
-            const currentTime = `${h}:${minutes}:${seconds} ${ampm}`;
-            document.querySelector('.clock').textContent = currentTime; 
+    document.getElementById('messageselect').addEventListener('change', function () {
+        var textbox = document.getElementById('msg');
+        var tv = this.value;
+        if (tv === '時報お疲れ様' || tv === 'じほおつ' || tv === 'ぬ' || tv === 't' || tv === '٩( ᐛ )و') {
+            textbox.removeAttribute('required');
+        } else {
+            textbox.setAttribute('required', 'required');
         }
+    });
 
-        displayTime();
-        setInterval(displayTime, 1000);
-    </script>
-  </body>
+    document.getElementById('command').addEventListener('change', function () {
+        var textbox = document.getElementById('msg');
+        if (this.value === '/disself' || this.value === '/restrict' || this.value === '/release') {
+            textbox.removeAttribute('required');
+        } else {
+            textbox.setAttribute('required', 'required');
+        }
+    });
+
+    function displayTime() {
+        const padZero = value => value.toString().padStart(2, '0');
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = padZero(now.getMinutes());
+        const seconds = padZero(now.getSeconds());
+
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? 12 : 12; // the hour '0' should be '12'
+
+        const h = padZero(hours);
+        const currentTime = `${h}:${minutes}:${seconds} ${ampm}`;
+        document.querySelector('.clock').textContent = currentTime;
+    }
+
+    displayTime();
+    setInterval(displayTime, 1000);
+</script>
+</body>
 </html>

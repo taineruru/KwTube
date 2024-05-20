@@ -224,7 +224,7 @@
         var regexp_watch = /\/watch\?v=([A-Za-z0-9_-]+)/g;
         
         var replaceWatch = function (all, videoId) {
-            return '<a href="https://b95-ex3.onrender.com/watch?v=' + videoId + '"/>';
+            return '<a href="https://b95-ex3.onrender.com/watch?v=' + videoId + '">'+ '/watch?v='+ videoId +'</a>';
         };
         
         var regexp_makeLink = function (all, url, h, href) {

@@ -93,7 +93,7 @@
     <h1 class="example4">掲示板</h1>
 </div>
 新規さんへ:まずは<a href="https://sites.google.com/view/yukibbs-wiki/yuki-bbs%E9%96%A2%E9%80%A3/Terms-of-Use?authuser=0"
-             target="_blank">利用規約</a>をご確認ください。<br/>
+            target="_blank">利用規約</a>をご確認ください。<br/>
 メッセージが送れない場合メッセージや名前が規制されている可能性があります。<br/>
 <div>
     <a href="/bbs/how">使い方</a>&nbsp;&nbsp;
@@ -227,7 +227,7 @@
         };
         
         var regexp_makeLink = function (all, url, h, href) {
-            return '<a href="h' + href + '">' + url + "</a>";
+            return '<a href="h' + href + '" target="_blank">' + url + "</a>";
         };
 
         str = str.replace(regexp_watch, replaceWatch);

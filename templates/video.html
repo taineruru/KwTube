@@ -150,9 +150,7 @@
 
         // ビデオIDをクリップボードにコピー
         navigator.clipboard.writeText("/watch?v="+videoId)
-            }});
-
-            function showConfirmation() {
+        function showConfirmation() {
     var confirmation = document.createElement('div');
     confirmation.textContent = 'ビデオIDがクリップボードにコピーされました';
     confirmation.style.position = 'fixed';
@@ -166,7 +164,9 @@
     setTimeout(function() {
         document.body.removeChild(confirmation);
     }, 3000); // 3秒後に自動的に削除
-}
+}}});
+
+            
 </script>
 </body>
 

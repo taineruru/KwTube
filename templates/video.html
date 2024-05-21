@@ -149,14 +149,20 @@
         const videoId = videoIdMatch[1];
 
         // ビデオIDをクリップボードにコピー
-        navigator.clipboard.writeText("/watch?v="+videoId);
-        showConfirmation();}});
+        navigator.clipboard.writeText("/watch?v="+videoId)
+            }});
 
             function showConfirmation() {
     var confirmation = document.createElement('div');
     confirmation.textContent = 'ビデオIDがクリップボードにコピーされました';
-    confirmation.style.display = "block";
+    confirmation.style.position = 'fixed';
+    confirmation.style.top = '20px';
+    confirmation.style.right = '20px';
+    confirmation.style.backgroundColor = '#f0f0f0';
+    confirmation.style.padding = '10px';
+    confirmation.style.border = '1px solid #ccc';
     document.body.appendChild(confirmation);
+    
     setTimeout(function() {
         document.body.removeChild(confirmation);
     }, 3000); // 3秒後に自動的に削除

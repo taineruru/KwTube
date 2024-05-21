@@ -155,13 +155,8 @@
             function showConfirmation() {
     var confirmation = document.createElement('div');
     confirmation.textContent = 'ビデオIDがクリップボードにコピーされました';
-    confirmation.style.position = 'fixed';
-    confirmation.style.top = '20px';
-    confirmation.style.right = '20px';
-    confirmation.style.padding = '10px';
-    confirmation.style.border = '1px solid #ccc';
+    confirmation.style.display = "block";
     document.body.appendChild(confirmation);
-    
     setTimeout(function() {
         document.body.removeChild(confirmation);
     }, 3000); // 3秒後に自動的に削除

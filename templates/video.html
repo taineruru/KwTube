@@ -151,12 +151,38 @@
         // ビデオIDをクリップボードにコピー
         navigator.clipboard.writeText("/watch?v="+videoId)
             .then(() => {
-                alert("ビデオIDがコピーされました"+videoId);
+                // メッセージを表示するための要素を取得
+                const messageElement = document.getElementById('message');
+                // メッセージを設定
+                messageElement.textContent = 'ビデオIDがクリップボードにコピーされました\nID:' + videoId;
+                // 3秒後にメッセージをクリア
+                setTimeout(() => {
+                    messageElement.textContent = '';
+                }, 3000);
             })
             .catch(err => {
-                console.error('コピーに失敗しました: ', err);
+                console.error('クリップボードへのコピーに失敗しました: ', err);
+                // エラーメッセージを表示するための要素を取得
+                const messageElement = document.getElementById('message');
+                // エラーメッセージを設定
+                messageElement.textContent = 'クリップボードへのコピーに失敗しました';
+                // 3秒後にメッセージをクリア
+                setTimeout(() => {
+                    messageElement.textContent = '';
+                }, 3000);
             });
-        }});
+    } else {
+        // エラーメッセージを表示するための要素を取得
+        const messageElement = document.getElementById('message');
+        // エラーメッセージを設定
+        messageElement.textContent = 'ビデオIDがURLに見つかりませんでした。';
+        // 3秒後にメッセージをクリア
+        setTimeout(() => {
+            messageElement.textContent = '';
+        }, 3000);
+    }
+});
+
 </script>
 </body>
 

@@ -153,7 +153,7 @@
         // ビデオIDをクリップボードにコピー
         navigator.clipboard.writeText("/watch?v="+videoId)
         .then(() => {
-                resultMessageElement.textContent = 'ビデオIDがクリップボードにコピーされました: ' + videoId;
+                resultMessageElement.textContent = 'ビデオIDがクリップボードにコピーされました\nID:' + videoId;
                 resultMessageElement.style.color = 'green'; // 成功した場合のメッセージを緑色に設定
             })
             .catch(err => {

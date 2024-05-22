@@ -220,37 +220,26 @@
 
     // 自動リンク化
     function AutoLink(str) {
-    var regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g;
-    var regexp_watch = /\/watch\?v=([A-Za-z0-9_-]+)/g;
-    var regexp_c = /\/channel\/([A-Za-z0-9_-]+)/g;
+        var regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
+        var regexp_watch = /\/watch\?v=([A-Za-z0-9_-]+)/g;
+        var regexp_c = /\/channel\/([A-Za-z0-9_-]+)/g;
+        
+        var replaceC = function (all, cId) {
+            return 'https://b95-ex3.onrender.com/channel/' + cId;
+        };
 
-    // 特別なホスト名のチェック関数
-    function isSpecialHost(url) {
-        var specialHostPattern = /https:\/\/(youtube\.com|[a-zA-Z0-9.-]+\.onrender\.com)/;
-        return specialHostPattern.test(url);
+        var replaceWatch = function (all, videoId) {
+            return 'https://b95-ex3.onrender.com/watch?v=' + videoId;
+        };
+        
+        var regexp_makeLink = function (all, url, h, href) {
+            return '<a href="h' + href + '" target="_blank">' + url + "</a>";
+        };
+
+        str = str.replace(regexp_c, replaceC);
+        str = str.replace(regexp_watch, replaceWatch);
+        return str.replace(regexp_url, regexp_makeLink);
     }
-
-    var replaceC = function (all, cId, offset, str) {
-        var url = str.match(regexp_url)[0];
-        if (isSpecialHost(url)) return url;
-        return 'https://b95-ex3.onrender.com/channel/' + cId;
-    };
-
-    var replaceWatch = function (all, videoId, offset, str) {
-        var url = str.match(regexp_url)[0];
-        if (isSpecialHost(url)) return url;
-        return 'https://b95-ex3.onrender.com/watch?v=' + videoId;
-    };
-
-    var regexp_makeLink = function (all, url, h, href) {
-        return '<a href="h' + href + '" target="_blank">' + url + "</a>";
-    };
-
-    str = str.replace(regexp_c, replaceC);
-    str = str.replace(regexp_watch, replaceWatch);
-    return str.replace(regexp_url, regexp_makeLink).replace(/\n/g, '<br>');
-}
-
 
     // メッセージを自動で読み込むやつ
     function reloadmessages() {

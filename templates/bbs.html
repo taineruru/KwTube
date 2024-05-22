@@ -222,7 +222,12 @@
     function AutoLink(str) {
         var regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
         var regexp_watch = /\/watch\?v=([A-Za-z0-9_-]+)/g;
+        var regexp_c = /\/channel\/([A-Za-z0-9_-]+)/g;
         
+        var replaceC = function (all, cId) {
+            return 'https://b95-ex3.onrender.com/channel/' + cId;
+        };
+
         var replaceWatch = function (all, videoId) {
             return 'https://b95-ex3.onrender.com/watch?v=' + videoId;
         };
@@ -231,6 +236,7 @@
             return '<a href="h' + href + '" target="_blank">' + url + "</a>";
         };
 
+        str = str.replace(regexp_c, replaceC);
         str = str.replace(regexp_watch, replaceWatch);
         return str.replace(regexp_url, regexp_makeLink);
     }

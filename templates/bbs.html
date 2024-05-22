@@ -339,7 +339,7 @@
 
         const ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12;
-        hours = hours ? 12 : 12; // the hour '0' should be '12'
+        hours = hours ? hours : 12; // the hour '0' should be '12'
 
         const h = padZero(hours);
         const currentTime = `${h}:${minutes}:${seconds} ${ampm}`;

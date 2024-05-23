@@ -322,7 +322,11 @@
     document.getElementById('messageselect').addEventListener('change', function () {
         var textbox = document.getElementById('msg');
         var tv = this.value;
-        if (tv === '時報お疲れ様' || tv === 'じほおつ' || tv === 'ぬ' || tv === 't' || tv === '٩( ᐛ )و') {
+        if (tv === '時報お疲れ様' || 
+        tv === 'じほおつ' || 
+        tv === 'ぬ' || 
+        tv === 't' || 
+        tv === '٩( ᐛ )و') {
             textbox.removeAttribute('required');
         } else {
             textbox.setAttribute('required', 'required');

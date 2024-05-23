@@ -141,6 +141,8 @@
             <option value="/topic ">/topic</option>
             <option value="/add ">/add</option>
             <option value="/color ">/color</option>
+            <option value="/genseeds">/genseeds</option>
+            <option value="/instance">/instance</option>
         </select>
     </div>
     <br/>
@@ -329,7 +331,11 @@
 
     document.getElementById('command').addEventListener('change', function () {
         var textbox = document.getElementById('msg');
-        if (this.value === '/disself' || this.value === '/restrict' || this.value === '/release') {
+        if (this.value === '/disself' || 
+            this.value === '/restrict' || 
+            this.value === '/release' || 
+            this.value === '/genseeds' || 
+            this.value === '/instance' ) {
             textbox.removeAttribute('required');
         } else {
             textbox.setAttribute('required', 'required');

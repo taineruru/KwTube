@@ -120,6 +120,7 @@
             <option value="" selected>メッセージセレクタ</option>
             <option value="時報お疲れ様">時報お疲れ様</option>
             <option value="じほおつ">じほおつ</option>
+            <option value="( ｣ﾟДﾟ)｣＜じほおつ〜！">( ｣ﾟДﾟ)｣＜じほおつ〜！</option>
         </select>
         <label for="message"></label>
         <select name="command" id="command">
@@ -326,7 +327,8 @@
         tv === 'じほおつ' || 
         tv === 'ぬ' || 
         tv === 't' || 
-        tv === '٩( ᐛ )و') {
+        tv === '٩( ᐛ )و' || 
+        tv === '( ｣ﾟДﾟ)｣＜じほおつ〜！' ) {
             textbox.removeAttribute('required');
         } else {
             textbox.setAttribute('required', 'required');

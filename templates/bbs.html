@@ -349,6 +349,8 @@
     function displayTime() {
         const padZero = value => value.toString().padStart(2, '0');
         const now = new Date();
+        const month = padZero(now.getMonth()+1);
+        const day = padZero(now.getDate());
         let hours = now.getHours();
         const minutes = padZero(now.getMinutes());
         const seconds = padZero(now.getSeconds());
@@ -358,12 +360,13 @@
         hours = hours ? hours : 12; // the hour '0' should be '12'
 
         const h = padZero(hours);
-        const currentTime = `${h}:${minutes}:${seconds} ${ampm}`;
+        const currentTime = `${month}\/${day} ${h}:${minutes}:${seconds} ${ampm}`;
         document.querySelector('.clock').textContent = currentTime;
     }
 
     displayTime();
     setInterval(displayTime, 1000);
+</script>
 </script>
 </body>
 </html>

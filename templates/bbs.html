@@ -136,14 +136,13 @@
             <option value="/dismoderator ">/dismoderator</option>
             <option value="/restrict">/restrict</option>
             <option value="/release">/release</option>
+            <option value="/revive">/revive</option>
             <option value="/stop ">/stop</option>
             <option value="/kill ">/kill</option>
             <option value="/ban ">/ban</option>
             <option value="/topic ">/topic</option>
             <option value="/add ">/add</option>
             <option value="/color ">/color</option>
-            <option value="/genseeds">/genseeds</option>
-            <option value="/instances">/instances</option>
         </select>
     </div>
     <br/>
@@ -339,9 +338,8 @@
         var textbox = document.getElementById('msg');
         if (this.value === '/disself' || 
             this.value === '/restrict' || 
-            this.value === '/release' || 
-            this.value === '/genseeds' || 
-            this.value === '/instances' ) {
+            this.value === '/release' ||
+            this.value === '/revive') {
             textbox.removeAttribute('required');
         } else {
             textbox.setAttribute('required', 'required');

@@ -60,7 +60,7 @@
         </div>
         <div class="pure-u-1-4"></div>
         <div class="pure-u-1 pure-u-md-12-24 searchbar">
-            <form class="pure-form" id="searchForm" action="/search" method="get">
+            <form class="pure-form" id="searchForm" action="/search" method="get" target="_blank">
                 <fieldset>
                     <input type="search" id="searchbox" autocomplete="on" autocorrect="on" autocapitalize="none" spellcheck="false" autofocus="" name="q" placeholder="検索" title="検索" value="">
                 </fieldset>
@@ -74,13 +74,16 @@
         <label>分: <input type="number" id="timerMinutes" min="0" value="0"></label>
         <label>秒: <input type="number" id="timerSeconds" min="0" value="0"></label>
         <button onclick="startTimer()">スタート</button>
+        <button onclick="pauseTimer()">一時停止</button>
+        <button onclick="resetTimer()">停止</button>
         <div id="timerDisplay"></div>
     </div>
 
     <script>
         let timesignalActivated = false;
         let timerInterval;
-        let endTime;
+        let remainingSeconds = 0;
+        let isPaused = false;
 
         $('#searchbox').autocomplete({
             source: function (request, response) {
@@ -142,54 +145,45 @@
         }
 
         function startTimer() {
+            if (isPaused) {
+                isPaused = false;
+                return;
+            }
             const minutes = parseInt(document.getElementById('timerMinutes').value);
             const seconds = parseInt(document.getElementById('timerSeconds').value);
-            const totalSeconds = (minutes * 60) + seconds;
-            endTime = Date.now() + totalSeconds * 1000;
-            localStorage.setItem('timerEndTime', endTime);
-
-            if (timerInterval) {
-                clearInterval(timerInterval);
-            }
+            remainingSeconds = (minutes * 60) + seconds;
 
             function updateTimerDisplay() {
-                const now = Date.now();
-                const remainingSeconds = Math.max(0, Math.floor((endTime - now) / 1000));
                 const minutes = Math.floor(remainingSeconds / 60);
                 const seconds = remainingSeconds % 60;
                 document.getElementById('timerDisplay').textContent = `残り: ${minutes}分 ${seconds}秒`;
                 if (remainingSeconds <= 0) {
                     alert('タイマーが終了しました！');
                     clearInterval(timerInterval);
-                    localStorage.removeItem('timerEndTime');
                 }
+                remainingSeconds--;
             }
 
             updateTimerDisplay();
             timerInterval = setInterval(updateTimerDisplay, 1000);
         }
 
-        function restoreTimer() {
-            const savedEndTime = localStorage.getItem('timerEndTime');
-            if (savedEndTime) {
-                endTime = parseInt(savedEndTime, 10);
-                if (Date.now() < endTime) {
-                    if (timerInterval) {
-                        clearInterval(timerInterval);
-                    }
-                    $('.timer').show();
-                    timerInterval = setInterval(function() {
-                        updateTimerDisplay();
-                    }, 1000);
-                } else {
-                    localStorage.removeItem('timerEndTime');
-                }
-            }
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isPaused = true;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            remainingSeconds = 0;
+            document.getElementById('timerDisplay').textContent = '';
+            document.getElementById('timerMinutes').value = 0;
+            document.getElementById('timerSeconds').value = 0;
+            isPaused = false;
         }
 
         displayTime();
         setInterval(displayTime, 1000);
-        restoreTimer();
     </script>
 </body>
 </html>

@@ -41,7 +41,7 @@
 
         .timer button {
             font-size: 20px;
-            background-color: #4CAF50;
+            background-color: red;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -50,7 +50,7 @@
         }
 
         .timer button:hover {
-            background-color: #45a049;
+            background-color: darkred;
         }
 
         .message {
@@ -58,12 +58,20 @@
             color: red;
             margin-top: 20px;
         }
+
+        .status-message {
+            font-size: 20px;
+            margin-top: 10px;
+            text-align: center;
+            color: blue;
+        }
     </style>
 </head>
 <body class="no-theme">
     <div class="headers">
         <p href="/" class="hs">Yuki Youtube</p>
         <div class="clock"></div>
+        <div class="status-message" id="statusMessage"></div>
     </div>
     <hr />
     <div class="pure-g h-box" id="search-widget">
@@ -87,11 +95,12 @@
 
     <div class="timer" style="color: red;">
         <h2>タイマー</h2>
+        <label style="color: red;">時間: <input type="number" id="timerHours" min="0" value="0"></label>
         <label style="color: red;">分: <input type="number" id="timerMinutes" min="0" value="0"></label>
         <label style="color: red;">秒: <input type="number" id="timerSeconds" min="0" value="0"></label>
-        <button style="background-color: red;" onclick="startTimer()">スタート</button>
-        <button style="background-color: red;" id="pauseButton" onclick="pauseOrResumeTimer()">一時停止</button>
-        <button style="background-color: red;" onclick="resetTimer()">停止</button>
+        <button onclick="startTimer()">スタート</button>
+        <button id="pauseButton" onclick="pauseOrResumeTimer()">一時停止</button>
+        <button onclick="resetTimer()">停止</button>
         <div>
             <input type="checkbox" id="soundToggle">
             <label for="soundToggle" style="color: red;">音を鳴らす</label>
@@ -99,7 +108,6 @@
         <div id="timerDisplay"></div>
         <div class="message" id="message"></div>
     </div>
-
     <script>
         let timesignalActivated = false;
         let timerInterval;
@@ -124,16 +132,17 @@
                 const command = this.value.trim().toLowerCase();
                 if (command === '/timesignal on') {
                     timesignalActivated = true;
-                    alert("時報機能が有効になりました！");
+                    updateStatusMessage("時報機能が有効になりました！");
                     event.preventDefault();
                 } else if (command === '/timesignal off') {
                     timesignalActivated = false;
-                    alert("時報機能が無効になりました！");
+                    updateStatusMessage("時報機能が無効になりました！");
                     event.preventDefault();
                 } else if (command === '/timer') {
                     $('.timer').show();
                     event.preventDefault();
                 }
+                this.value = '';  // エンターを押したら検索バー内の文字を消す
             }
         });
 
@@ -164,6 +173,9 @@
             if (current24Hours >= 24) current24Hours -= 24; // 24時を超えた場合の補正
             if (alertHours.includes(current24Hours) && minutes === '00') {
                 document.getElementById('message').textContent = `時報: ${current24Hours}時です。`;
+                if (document.getElementById('soundToggle').checked) {
+                    playBeep();
+                }
             }
         }
 
@@ -172,14 +184,16 @@
                 resumeTimer();
                 return;
             }
+            const hours = parseInt(document.getElementById('timerHours').value);
             const minutes = parseInt(document.getElementById('timerMinutes').value);
             const seconds = parseInt(document.getElementById('timerSeconds').value);
-            remainingSeconds = (minutes * 60) + seconds;
+            remainingSeconds = (hours * 3600) + (minutes * 60) + seconds;
 
             function updateTimerDisplay() {
-                const minutes = Math.floor(remainingSeconds / 60);
+                const hours = Math.floor(remainingSeconds / 3600);
+                const minutes = Math.floor((remainingSeconds % 3600) / 60);
                 const seconds = remainingSeconds % 60;
-                document.getElementById('timerDisplay').textContent = `残り: ${minutes}分 ${seconds}秒`;
+                document.getElementById('timerDisplay').textContent = `残り: ${hours}時間 ${minutes}分 ${seconds}秒`;
                 if (remainingSeconds <= 0) {
                     document.getElementById('message').textContent = 'タイマーが終了しました！';
                     if (document.getElementById('soundToggle').checked) {
@@ -218,6 +232,7 @@
             clearInterval(timerInterval);
             remainingSeconds = 0;
             document.getElementById('timerDisplay').textContent = '';
+            document.getElementById('timerHours').value = 0;
             document.getElementById('timerMinutes').value = 0;
             document.getElementById('timerSeconds').value = 0;
             document.getElementById('message').textContent = '';
@@ -244,6 +259,16 @@
                     oscillator.start(context.currentTime + 1); // 1秒後に再開
                 }
             }, 1000);
+        }
+
+        function updateStatusMessage(message) {
+            const statusMessageElement = document.getElementById('statusMessage');
+            statusMessageElement.textContent = message;
+            statusMessageElement.style.backgroundColor = 'yellow';
+            setTimeout(() => {
+                statusMessageElement.textContent = '';
+                statusMessageElement.style.backgroundColor = 'transparent';
+            }, 3000);
         }
 
         displayTime();

@@ -147,20 +147,21 @@
         });
 
         function displayTime() {
-            const padZero = value => value.toString().padStart(2, '0');
-            const now = new Date();
-            let hours = now.getUTCHours() + 9; // 日本時間に変換（UTC+9）
-            if (hours >= 24) hours -= 24; // 24時を超えた場合の補正
-            const minutes = padZero(now.getMinutes());
-            const seconds = padZero(now.getSeconds());
+        const padZero = value => value.toString().padStart(2, '0');
+        const now = new Date();
+        const month = padZero(now.getMonth()+1);
+        const day = padZero(now.getDate());
+        let hours = now.getHours();
+        const minutes = padZero(now.getMinutes());
+        const seconds = padZero(now.getSeconds());
 
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12;
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
 
-            const h = padZero(hours);
-            const currentTime = `${h}:${minutes}:${seconds} ${ampm}`;
-            document.querySelector('.clock').textContent = currentTime;
+        const h = padZero(hours);
+        const currentTime = `${month}\/${day} ${h}:${minutes}:${seconds} ${ampm}`;
+        document.querySelector('.clock').textContent = currentTime;
 
             if (timesignalActivated) {
                 checkTimeForTimesignal(hours, minutes);

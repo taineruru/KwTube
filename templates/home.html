@@ -169,7 +169,7 @@
         }
 
         function checkTimeForTimesignal(hours, minutes) {
-            const alertHours = [0, 6, 12, 15, 22];
+            const alertHours = [0, 6, 12, 15, 18, 22];
             const current24Hours = new Date().getUTCHours() + 9; // 日本時間に変換（UTC+9）
             if (current24Hours >= 24) current24Hours -= 24; // 24時を超えた場合の補正
             if (alertHours.includes(current24Hours) && minutes === '00') {

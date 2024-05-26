@@ -41,6 +41,16 @@
 
         .timer button {
             font-size: 20px;
+            background-color: #4CAF50; /* 緑の背景色 */
+            color: white; /* 白い文字色 */
+            border: none; /* 枠線を消す */
+            padding: 10px 20px; /* パディングを追加 */
+            margin: 5px; /* ボタン間の余白 */
+            cursor: pointer; /* カーソルをポインタに変更 */
+        }
+
+        .timer button:hover {
+            background-color: #45a049; /* ホバー時の背景色 */
         }
     </style>
 </head>
@@ -119,7 +129,8 @@
         function displayTime() {
             const padZero = value => value.toString().padStart(2, '0');
             const now = new Date();
-            let hours = now.getHours();
+            let hours = now.getUTCHours() + 9; // 日本時間に変換（UTC+9）
+            if (hours >= 24) hours -= 24; // 24時を超えた場合の補正
             const minutes = padZero(now.getMinutes());
             const seconds = padZero(now.getSeconds());
 
@@ -138,7 +149,8 @@
 
         function checkTimeForTimesignal(hours, minutes) {
             const alertHours = [0, 6, 12, 15, 22];
-            const current24Hours = new Date().getHours(); // 24-hour format
+            const current24Hours = new Date().getUTCHours() + 9; // 日本時間に変換（UTC+9）
+            if (current24Hours >= 24) current24Hours -= 24; // 24時を超えた場合の補正
             if (alertHours.includes(current24Hours) && minutes === '00') {
                 alert(`時報: ${current24Hours}時です。`);
             }

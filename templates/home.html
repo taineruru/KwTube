@@ -41,16 +41,16 @@
 
         .timer button {
             font-size: 20px;
-            background-color: #ff0000; /* 緑の背景色 */
-            color: white; /* 白い文字色 */
-            border: none; /* 枠線を消す */
-            padding: 10px 20px; /* パディングを追加 */
-            margin: 5px; /* ボタン間の余白 */
-            cursor: pointer; /* カーソルをポインタに変更 */
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
         }
 
         .timer button:hover {
-            background-color: #ff0000; /* ホバー時の背景色 */
+            background-color: #45a049;
         }
     </style>
 </head>
@@ -84,8 +84,12 @@
         <label>分: <input type="number" id="timerMinutes" min="0" value="0"></label>
         <label>秒: <input type="number" id="timerSeconds" min="0" value="0"></label>
         <button onclick="startTimer()">スタート</button>
-        <button onclick="pauseTimer()">一時停止</button>
+        <button id="pauseButton" onclick="pauseOrResumeTimer()">一時停止</button>
         <button onclick="resetTimer()">停止</button>
+        <div>
+            <input type="checkbox" id="soundToggle">
+            <label for="soundToggle">音を鳴らす</label>
+        </div>
         <div id="timerDisplay"></div>
     </div>
 
@@ -114,14 +118,14 @@
                 if (command === '/timesignal on') {
                     timesignalActivated = true;
                     alert("時報機能が有効になりました！");
-                    event.preventDefault();  // フォームのデフォルトの送信を防ぐ
+                    event.preventDefault();
                 } else if (command === '/timesignal off') {
                     timesignalActivated = false;
                     alert("時報機能が無効になりました！");
-                    event.preventDefault();  // フォームのデフォルトの送信を防ぐ
+                    event.preventDefault();
                 } else if (command === '/timer') {
                     $('.timer').show();
-                    event.preventDefault();  // フォームのデフォルトの送信を防ぐ
+                    event.preventDefault();
                 }
             }
         });
@@ -136,7 +140,7 @@
 
             const ampm = hours >= 12 ? 'PM' : 'AM';
             hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
+            hours = hours ? hours : 12;
 
             const h = padZero(hours);
             const currentTime = `${h}:${minutes}:${seconds} ${ampm}`;
@@ -158,7 +162,7 @@
 
         function startTimer() {
             if (isPaused) {
-                isPaused = false;
+                resumeTimer();
                 return;
             }
             const minutes = parseInt(document.getElementById('timerMinutes').value);
@@ -171,6 +175,9 @@
                 document.getElementById('timerDisplay').textContent = `残り: ${minutes}分 ${seconds}秒`;
                 if (remainingSeconds <= 0) {
                     alert('タイマーが終了しました！');
+                    if (document.getElementById('soundToggle').checked) {
+                        playBeep();
+                    }
                     clearInterval(timerInterval);
                 }
                 remainingSeconds--;
@@ -180,9 +187,24 @@
             timerInterval = setInterval(updateTimerDisplay, 1000);
         }
 
+        function pauseOrResumeTimer() {
+            if (isPaused) {
+                resumeTimer();
+            } else {
+                pauseTimer();
+            }
+        }
+
         function pauseTimer() {
             clearInterval(timerInterval);
             isPaused = true;
+            document.getElementById('pauseButton').textContent = "再開";
+        }
+
+        function resumeTimer() {
+            isPaused = false;
+            document.getElementById('pauseButton').textContent = "一時停止";
+            startTimer();
         }
 
         function resetTimer() {
@@ -192,6 +214,17 @@
             document.getElementById('timerMinutes').value = 0;
             document.getElementById('timerSeconds').value = 0;
             isPaused = false;
+            document.getElementById('pauseButton').textContent = "一時停止";
+        }
+
+        function playBeep() {
+            const context = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = context.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(1000, context.currentTime); // 1000 Hz
+            oscillator.connect(context.destination);
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 500); // 500 ms beep
         }
 
         displayTime();

@@ -113,6 +113,8 @@
         let timerInterval;
         let remainingSeconds = 0;
         let isPaused = false;
+        let lastDate = new Date().getDate();
+        let timesignalInterval;
 
         $('#searchbox').autocomplete({
             source: function (request, response) {
@@ -147,37 +149,76 @@
         });
 
         function displayTime() {
-        const padZero = value => value.toString().padStart(2, '0');
-        const now = new Date();
-        const month = padZero(now.getMonth()+1);
-        const day = padZero(now.getDate());
-        let hours = now.getHours();
-        const minutes = padZero(now.getMinutes());
-        const seconds = padZero(now.getSeconds());
+            const padZero = value => value.toString().padStart(2, '0');
+            const now = new Date();
+            let hours = now.getUTCHours() + 9; // 日本時間に変換（UTC+9）
+            if (hours >= 24) hours -= 24; // 24時を超えた場合の補正
+            const minutes = padZero(now.getMinutes());
+            const seconds = padZero(now.getSeconds());
+            const day = padZero(now.getDate());
+            const month = padZero(now.getMonth() + 1);
+            const year = now.getFullYear();
 
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12; // 0 を 12 に変換
 
-        const h = padZero(hours);
-        const currentTime = `${month}\/${day} ${h}:${minutes}:${seconds} ${ampm}`;
-        document.querySelector('.clock').textContent = currentTime;
+            const h = padZero(displayHours);
+            const currentTime = `${year}/${month}/${day} ${h}:${minutes}:${seconds} ${ampm}`;
+            document.querySelector('.clock').textContent = currentTime;
 
             if (timesignalActivated) {
-                checkTimeForTimesignal(hours, minutes);
+                checkTimeForTimesignal(displayHours, minutes, seconds, ampm);
+            }
+
+            if (now.getDate() !== lastDate) {
+                lastDate = now.getDate();
+                announceDate(year, month, day);
             }
         }
 
-        function checkTimeForTimesignal(hours, minutes) {
-            const alertHours = [0, 6, 12, 15, 18, 22];
+        function checkTimeForTimesignal(hours, minutes, seconds, ampm) {
+            const alertTimes = [
+                { hours: 12, ampm: 'AM' },
+                { hours: 6, ampm: 'AM' },
+                { hours: 12, ampm: 'PM' },
+                { hours: 3, ampm: 'PM' },
+                { hours: 10, ampm: 'PM' }
+            ];
             const current24Hours = new Date().getUTCHours() + 9; // 日本時間に変換（UTC+9）
             if (current24Hours >= 24) current24Hours -= 24; // 24時を超えた場合の補正
-            if (alertHours.includes(current24Hours) && minutes === '00') {
-                document.getElementById('message').textContent = `時報: ${current24Hours}時です。`;
-                if (document.getElementById('soundToggle').checked) {
-                    playBeep();
-                }
+            const currentAMPM = current24Hours >= 12 ? 'PM' : 'AM';
+            const current12Hour = current24Hours % 12 || 12;
+
+            if (alertTimes.some(t => t.hours === current12Hour && t.ampm === currentAMPM) && minutes === '59' && seconds >= '55') {
+                playTimesignalSequence();
             }
+        }
+
+        function playTimesignalSequence() {
+            let beepCount = 0;
+            timesignalInterval = setInterval(() => {
+                playBeep();
+                beepCount++;
+                if (beepCount >= 5) {
+                    clearInterval(timesignalInterval);
+                    announceTime();
+                }
+            }, 1000);
+        }
+
+        function announceTime() {
+            const now = new Date();
+            let hours = now.getUTCHours() + 9; // 日本時間に変換（UTC+9）
+            if (hours >= 24) hours -= 24; // 24時を超えた場合の補正
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12; // 0 を 12 に変換
+            const minutes = '00';
+
+            const timeMessage = `時報: ただ今${displayHours}時${minutes}分 ${ampm}です。`;
+            if (document.getElementById('soundToggle').checked) {
+                speakText(timeMessage);
+            }
+            document.getElementById('message').textContent = timeMessage;
         }
 
         function startTimer() {
@@ -211,65 +252,57 @@
 
         function pauseOrResumeTimer() {
             if (isPaused) {
-                resumeTimer();
+                startTimer();
+                document.getElementById('pauseButton').textContent = '一時停止';
             } else {
-                pauseTimer();
+                clearInterval(timerInterval);
+                document.getElementById('pauseButton').textContent = '再開';
             }
-        }
-
-        function pauseTimer() {
-            clearInterval(timerInterval);
-            isPaused = true;
-            document.getElementById('pauseButton').textContent = "再開";
-        }
-
-        function resumeTimer() {
-            isPaused = false;
-            document.getElementById('pauseButton').textContent = "一時停止";
-            startTimer();
+            isPaused = !isPaused;
         }
 
         function resetTimer() {
             clearInterval(timerInterval);
             remainingSeconds = 0;
-            document.getElementById('timerDisplay').textContent = '';
-            document.getElementById('timerHours').value = 0;
-            document.getElementById('timerMinutes').value = 0;
-            document.getElementById('timerSeconds').value = 0;
-            document.getElementById('message').textContent = '';
             isPaused = false;
-            document.getElementById('pauseButton').textContent = "一時停止";
+            document.getElementById('timerDisplay').textContent = '';
+            document.getElementById('message').textContent = '';
+            document.getElementById('pauseButton').textContent = '一時停止';
+        }
+
+        function updateStatusMessage(message) {
+            document.getElementById('statusMessage').textContent = message;
+            setTimeout(() => {
+                document.getElementById('statusMessage').textContent = '';
+            }, 5000);
+        }
+
+        function announceDate(year, month, day) {
+            const dateMessage = `今日は${year}年${month}月${day}日です`;
+            if (document.getElementById('soundToggle').checked) {
+                speakText(dateMessage);
+            }
+            document.getElementById('message').textContent = dateMessage;
+        }
+
+        function speakText(text) {
+            const synth = window.speechSynthesis;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ja-JP';
+            synth.speak(utterance);
         }
 
         function playBeep() {
             const context = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
             oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(1000, context.currentTime); // 1000 Hz
-            oscillator.connect(context.destination);
-            oscillator.start();
-
-            let beepCount = 0;
-            const beepInterval = setInterval(() => {
-                beepCount++;
-                if (beepCount >= 5) { // ビープ音を5回鳴らす
-                    clearInterval(beepInterval);
-                    oscillator.stop();
-                } else {
-                    oscillator.stop(context.currentTime + 0.5); // 500ミリ秒間鳴らす
-                    oscillator.start(context.currentTime + 1); // 1秒後に再開
-                }
-            }, 1000);
-        }
-
-        function updateStatusMessage(message) {
-            const statusMessageElement = document.getElementById('statusMessage');
-            statusMessageElement.textContent = message;
-            statusMessageElement.style.backgroundColor = 'yellow';
-            setTimeout(() => {
-                statusMessageElement.textContent = '';
-                statusMessageElement.style.backgroundColor = 'transparent';
-            }, 3000);
+            oscillator.frequency.setValueAtTime(1000, context.currentTime);
+            gainNode.gain.setValueAtTime(1, context.currentTime);
+            oscillator.start(context.currentTime);
+            oscillator.stop(context.currentTime + 0.5);
         }
 
         displayTime();

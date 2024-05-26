@@ -85,16 +85,16 @@
         <div class="pure-u-1-4"></div>
     </div>
 
-    <div class="timer">
+    <div class="timer" style="color: red;">
         <h2>タイマー</h2>
-        <label>分: <input type="number" id="timerMinutes" min="0" value="0"></label>
-        <label>秒: <input type="number" id="timerSeconds" min="0" value="0"></label>
-        <button onclick="startTimer()">スタート</button>
-        <button id="pauseButton" onclick="pauseOrResumeTimer()">一時停止</button>
-        <button onclick="resetTimer()">停止</button>
+        <label style="color: red;">分: <input type="number" id="timerMinutes" min="0" value="0"></label>
+        <label style="color: red;">秒: <input type="number" id="timerSeconds" min="0" value="0"></label>
+        <button style="background-color: red;" onclick="startTimer()">スタート</button>
+        <button style="background-color: red;" id="pauseButton" onclick="pauseOrResumeTimer()">一時停止</button>
+        <button style="background-color: red;" onclick="resetTimer()">停止</button>
         <div>
             <input type="checkbox" id="soundToggle">
-            <label for="soundToggle">音を鳴らす</label>
+            <label for="soundToggle" style="color: red;">音を鳴らす</label>
         </div>
         <div id="timerDisplay"></div>
         <div class="message" id="message"></div>

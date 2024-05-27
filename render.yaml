@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: B95_ex
+    name: Y112
     env: python
     region: Oregon
     plan: free

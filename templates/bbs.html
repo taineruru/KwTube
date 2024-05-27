@@ -224,30 +224,24 @@
     function AutoLink(str) {
         var regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
         var regexp_watch = /\/watch\?v=([A-Za-z0-9_-]+)/g;
-	var regexp_c = /\/channel\/([A-Za-z0-9_-]+)/g;
+        var regexp_c = /\/channel\/([A-Za-z0-9_-]+)/g;
         
-        var urls = window.location.href;
-
-        const IUM = url.match(/https:\/\/b95-ex-[a-zA-Z0-9]+\.onrender\.com/);
-    if (IUM) {
-        const IU = IUM[1];
-
-	var replaceC = function (all, cId) {
-            return IU+'/channel/' + cId;
+        var replaceC = function (all, cId) {
+            return 'https://b95-ex-9fbx.onrender.com/channel/' + cId;
         };
 
         var replaceWatch = function (all, videoId) {
-            return IU+'watch?v=' + videoId;
+            return 'https://b95-ex-9fbx.onrender.com/watch?v=' + videoId;
         };
         
         var regexp_makeLink = function (all, url, h, href) {
             return '<a href="h' + href + '" target="_blank">' + url + "</a>";
         };
 
-	str = str.replace(regexp_c, replaceC);
+        str = str.replace(regexp_c, replaceC);
         str = str.replace(regexp_watch, replaceWatch);
         return str.replace(regexp_url, regexp_makeLink);
-    }}
+    }
 
     // メッセージを自動で読み込むやつ
     function reloadmessages() {

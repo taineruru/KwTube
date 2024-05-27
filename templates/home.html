@@ -76,17 +76,17 @@
     <hr />
     <div class="pure-g h-box" id="search-widget">
         <div class="pure-u-1" id="logo">
-            <a href="/bbs">Œf¦”Â</a>&nbsp;&nbsp;
+            <a href="/bbs">æ²ç¤ºæ¿</a>&nbsp;&nbsp;
             <a href="/ex3about">about</a>
-            <a href="/forms">ƒŠƒNƒGƒXƒg</a>&nbsp;&nbsp;
+            <a href="/forms">ãƒªã‚¯ã‚¨ã‚¹ãƒˆ</a>&nbsp;&nbsp;
             <a href="https://sites.google.com/view/b9514" target="_blank">info</a>&nbsp;&nbsp;
-            <a href="/requestform">V‹@”\‚Ì—v–]‚âƒoƒO•ñ</a>
+            <a href="/requestform">æ–°æ©Ÿèƒ½ã®è¦æœ›ã‚„ãƒã‚°å ±å‘Š</a>
         </div>
         <div class="pure-u-1-4"></div>
         <div class="pure-u-1 pure-u-md-12-24 searchbar">
             <form class="pure-form" id="searchForm" action="/search" method="get" target="_blank">
                 <fieldset>
-                    <input type="search" id="searchbox" autocomplete="on" autocorrect="on" autocapitalize="none" spellcheck="false" autofocus="" name="q" placeholder="ŒŸõ" title="ŒŸõ" value="">
+                    <input type="search" id="searchbox" autocomplete="on" autocorrect="on" autocapitalize="none" spellcheck="false" autofocus="" name="q" placeholder="æ¤œç´¢" title="æ¤œç´¢" value="">
                 </fieldset>
             </form>
         </div>
@@ -94,16 +94,16 @@
     </div>
 
     <div class="timer" style="color: red;">
-        <h2>ƒ^ƒCƒ}[</h2>
-        <label style="color: red;">ŠÔ: <input type="number" id="timerHours" min="0" value="0"></label>
-        <label style="color: red;">•ª: <input type="number" id="timerMinutes" min="0" value="0"></label>
-        <label style="color: red;">•b: <input type="number" id="timerSeconds" min="0" value="0"></label>
-        <button onclick="startTimer()">ƒXƒ^[ƒg</button>
-        <button id="pauseButton" onclick="pauseOrResumeTimer()">ˆê’â~</button>
-        <button onclick="resetTimer()">’â~</button>
+        <h2>ã‚¿ã‚¤ãƒãƒ¼</h2>
+        <label style="color: red;">æ™‚é–“: <input type="number" id="timerHours" min="0" value="0"></label>
+        <label style="color: red;">åˆ†: <input type="number" id="timerMinutes" min="0" value="0"></label>
+        <label style="color: red;">ç§’: <input type="number" id="timerSeconds" min="0" value="0"></label>
+        <button onclick="startTimer()">ã‚¹ã‚¿ãƒ¼ãƒˆ</button>
+        <button id="pauseButton" onclick="pauseOrResumeTimer()">ä¸€æ™‚åœæ­¢</button>
+        <button onclick="resetTimer()">åœæ­¢</button>
         <div>
             <input type="checkbox" id="soundToggle">
-            <label for="soundToggle" style="color: red;">‰¹‚ğ–Â‚ç‚·</label>
+            <label for="soundToggle" style="color: red;">éŸ³ã‚’é³´ã‚‰ã™</label>
         </div>
         <div id="timerDisplay"></div>
         <div class="message" id="message"></div>
@@ -134,24 +134,25 @@ $('#searchbox').on('keydown', function(event) {
         const command = this.value.trim().toLowerCase();
         if (command === '/timesignal on') {
             timesignalActivated = true;
-            updateStatusMessage("•ñ‹@”\‚ª—LŒø‚É‚È‚è‚Ü‚µ‚½I");
+            updateStatusMessage("æ™‚å ±æ©Ÿèƒ½ãŒæœ‰åŠ¹ã«ãªã‚Šã¾ã—ãŸï¼");
             event.preventDefault();
         } else if (command === '/timesignal off') {
             timesignalActivated = false;
-            updateStatusMessage("•ñ‹@”\‚ª–³Œø‚É‚È‚è‚Ü‚µ‚½I");
+            updateStatusMessage("æ™‚å ±æ©Ÿèƒ½ãŒç„¡åŠ¹ã«ãªã‚Šã¾ã—ãŸï¼");
             event.preventDefault();
         } else if (command === '/timer') {
             $('.timer').show();
             event.preventDefault();
         }
+        this.value = '';  // ã‚¨ãƒ³ã‚¿ãƒ¼ã‚’æŠ¼ã—ãŸã‚‰æ¤œç´¢ãƒãƒ¼å†…ã®æ–‡å­—ã‚’æ¶ˆã™
     }
 });
 
 function displayTime() {
     const padZero = value => value.toString().padStart(2, '0');
     const now = new Date();
-    let hours = now.getUTCHours() + 9; // “ú–{ŠÔ‚É•ÏŠ·iUTC+9j
-    if (hours >= 24) hours -= 24; // 24‚ğ’´‚¦‚½ê‡‚Ì•â³
+    let hours = now.getUTCHours() + 9; // æ—¥æœ¬æ™‚é–“ã«å¤‰æ›ï¼ˆUTC+9ï¼‰
+    if (hours >= 24) hours -= 24; // 24æ™‚ã‚’è¶…ãˆãŸå ´åˆã®è£œæ­£
     const minutes = padZero(now.getMinutes());
     const seconds = padZero(now.getSeconds());
     const day = padZero(now.getDate());
@@ -159,7 +160,7 @@ function displayTime() {
     const year = now.getFullYear();
 
     const ampm = hours >= 12 ? 'PM' : 'AM';
-    const displayHours = hours % 12 || 12; // 0 ‚ğ 12 ‚É•ÏŠ·
+    const displayHours = hours % 12 || 12; // 0 ã‚’ 12 ã«å¤‰æ›
 
     const h = padZero(displayHours);
     const currentTime = `${year}/${month}/${day} ${h}:${minutes}:${seconds} ${ampm}`;
@@ -183,8 +184,8 @@ function checkTimeForTimesignal(hours, minutes, seconds, ampm) {
         { hours: 3, ampm: 'PM' },
         { hours: 10, ampm: 'PM' }
     ];
-    const current24Hours = new Date().getUTCHours() + 9; // “ú–{ŠÔ‚É•ÏŠ·iUTC+9j
-    if (current24Hours >= 24) current24Hours -= 24; // 24‚ğ’´‚¦‚½ê‡‚Ì•â³
+    const current24Hours = new Date().getUTCHours() + 9; // æ—¥æœ¬æ™‚é–“ã«å¤‰æ›ï¼ˆUTC+9ï¼‰
+    if (current24Hours >= 24) current24Hours -= 24; // 24æ™‚ã‚’è¶…ãˆãŸå ´åˆã®è£œæ­£
     const currentAMPM = current24Hours >= 12 ? 'PM' : 'AM';
     const current12Hour = current24Hours % 12 || 12;
 
@@ -207,13 +208,13 @@ function playTimesignalSequence() {
 
 function announceTime() {
     const now = new Date();
-    let hours = now.getUTCHours() + 9; // “ú–{ŠÔ‚É•ÏŠ·iUTC+9j
-    if (hours >= 24) hours -= 24; // 24‚ğ’´‚¦‚½ê‡‚Ì•â³
+    let hours = now.getUTCHours() + 9; // æ—¥æœ¬æ™‚é–“ã«å¤‰æ›ï¼ˆUTC+9ï¼‰
+    if (hours >= 24) hours -= 24; // 24æ™‚ã‚’è¶…ãˆãŸå ´åˆã®è£œæ­£
     const ampm = hours >= 12 ? 'PM' : 'AM';
-    const displayHours = hours % 12 || 12; // 0 ‚ğ 12 ‚É•ÏŠ·
+    const displayHours = hours % 12 || 12; // 0 ã‚’ 12 ã«å¤‰æ›
     const minutes = '00';
 
-    const timeMessage = `•ñ: ‚½‚¾¡${displayHours}${minutes}•ª ${ampm}‚Å‚·B`;
+    const timeMessage = `æ™‚å ±: ãŸã ä»Š${displayHours}æ™‚${minutes}åˆ† ${ampm}ã§ã™ã€‚`;
     if (document.getElementById('soundToggle').checked) {
         speakText(timeMessage);
     }
@@ -234,9 +235,9 @@ function startTimer() {
         const hours = Math.floor(remainingSeconds / 3600);
         const minutes = Math.floor((remainingSeconds % 3600) / 60);
         const seconds = remainingSeconds % 60;
-        document.getElementById('timerDisplay').textContent = `c‚è: ${hours}ŠÔ ${minutes}•ª ${seconds}•b`;
+        document.getElementById('timerDisplay').textContent = `æ®‹ã‚Š: ${hours}æ™‚é–“ ${minutes}åˆ† ${seconds}ç§’`;
         if (remainingSeconds <= 0) {
-            document.getElementById('message').textContent = 'ƒ^ƒCƒ}[‚ªI—¹‚µ‚Ü‚µ‚½I';
+            document.getElementById('message').textContent = 'ã‚¿ã‚¤ãƒãƒ¼ãŒçµ‚äº†ã—ã¾ã—ãŸï¼';
             if (document.getElementById('soundToggle').checked) {
                 playBeep();
             }
@@ -252,10 +253,10 @@ function startTimer() {
 function pauseOrResumeTimer() {
     if (isPaused) {
         startTimer();
-        document.getElementById('pauseButton').textContent = 'ˆê’â~';
+        document.getElementById('pauseButton').textContent = 'ä¸€æ™‚åœæ­¢';
     } else {
         clearInterval(timerInterval);
-        document.getElementById('pauseButton').textContent = 'ÄŠJ';
+        document.getElementById('pauseButton').textContent = 'å†é–‹';
     }
     isPaused = !isPaused;
 }
@@ -266,7 +267,7 @@ function resetTimer() {
     isPaused = false;
     document.getElementById('timerDisplay').textContent = '';
     document.getElementById('message').textContent = '';
-    document.getElementById('pauseButton').textContent = 'ˆê’â~';
+    document.getElementById('pauseButton').textContent = 'ä¸€æ™‚åœæ­¢';
 }
 
 function updateStatusMessage(message) {
@@ -277,7 +278,7 @@ function updateStatusMessage(message) {
 }
 
 function announceDate(year, month, day) {
-    const dateMessage = `¡“ú‚Í${year}”N${month}Œ${day}“ú‚Å‚·`;
+    const dateMessage = `ä»Šæ—¥ã¯${year}å¹´${month}æœˆ${day}æ—¥ã§ã™`;
     if (document.getElementById('soundToggle').checked) {
         speakText(dateMessage);
     }

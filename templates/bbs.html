@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Ex/現在開発途中…</title>
+    <title>現在開発中</title>
     <script>
         const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
             .then(FingerprintJS => FingerprintJS.load())
@@ -114,10 +114,10 @@
         </select>
         <label for="message"></label>
         <select name="messageselect" id="messageselect">
+            <option value="" selected>メッセージセレクタ</option>
             <option value="t">t</option>
             <option value="ぬ">ぬ</option>
             <option value="٩( ᐛ )و">٩( ᐛ )و</option>
-            <option value="" selected>メッセージセレクタ</option>
             <option value="時報お疲れ様">時報お疲れ様</option>
             <option value="じほおつ">じほおつ</option>
             <option value="( ｣ﾟДﾟ)｣＜じほおつ〜！">( ｣ﾟДﾟ)｣＜じほおつ〜！</option>
@@ -222,19 +222,20 @@
 
     // 自動リンク化
     function AutoLink(str) {
-        var regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
-        var regexp_watch = /\/watch\?v=([A-Za-z0-9_-]+)/g;
-        var regexp_c = /\/channel\/([A-Za-z0-9_-]+)/g;
-        
-        var replaceC = function (all, cId) {
-            return 'https://b95-ex-9fbx.onrender.com/channel/' + cId;
+        const currentUrl = window.location.origin.match(/https?:\/\/[^\/]+\.com/)[0];
+        const regexp_url = /((h?)(ttps?:\/\/[\w\.\/\?=&;#~\-]+[^<\/\s])(\s)*)/g;
+        const regexp_watch = /\/watch\?v=([A-Za-z0-9_-]+)/g;
+        const regexp_c = /\/channel\/([A-Za-z0-9_-]+)/g;
+
+        const replaceC = function (all, cId) {
+            return currentUrl + '/channel/' + cId;
         };
 
-        var replaceWatch = function (all, videoId) {
-            return 'https://b95-ex-9fbx.onrender.com/watch?v=' + videoId;
+        const replaceWatch = function (all, videoId) {
+            return currentUrl + '/watch?v=' + videoId;
         };
-        
-        var regexp_makeLink = function (all, url, h, href) {
+
+        const regexp_makeLink = function (all, url, h, href) {
             return '<a href="h' + href + '" target="_blank">' + url + "</a>";
         };
 
@@ -322,12 +323,12 @@
     document.getElementById('messageselect').addEventListener('change', function () {
         var textbox = document.getElementById('msg');
         var tv = this.value;
-        if (tv === '時報お疲れ様' || 
-        tv === 'じほおつ' || 
-        tv === 'ぬ' || 
-        tv === 't' || 
-        tv === '٩( ᐛ )و' || 
-        tv === '( ｣ﾟДﾟ)｣＜じほおつ〜！' ) {
+        if (tv === '時報お疲れ様' ||
+            tv === 'じほおつ' ||
+            tv === 'ぬ' ||
+            tv === 't' ||
+            tv === '٩( ᐛ )و' ||
+            tv === '( ｣ﾟДﾟ)｣＜じほおつ〜！') {
             textbox.removeAttribute('required');
         } else {
             textbox.setAttribute('required', 'required');
@@ -336,8 +337,8 @@
 
     document.getElementById('command').addEventListener('change', function () {
         var textbox = document.getElementById('msg');
-        if (this.value === '/disself' || 
-            this.value === '/restrict' || 
+        if (this.value === '/disself' ||
+            this.value === '/restrict' ||
             this.value === '/release' ||
             this.value === '/revive') {
             textbox.removeAttribute('required');
@@ -349,7 +350,7 @@
     function displayTime() {
         const padZero = value => value.toString().padStart(2, '0');
         const now = new Date();
-        const month = padZero(now.getMonth()+1);
+        const month = padZero(now.getMonth() + 1);
         const day = padZero(now.getDate());
         let hours = now.getHours();
         const minutes = padZero(now.getMinutes());
@@ -366,7 +367,6 @@
 
     displayTime();
     setInterval(displayTime, 1000);
-</script>
 </script>
 </body>
 </html>

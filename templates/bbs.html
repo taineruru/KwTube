@@ -286,7 +286,7 @@ function displayTime() {
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const h = padZero(hours % 12 || 12);
     const currentTime = `${padZero(now.getMonth() + 1)}/${padZero(now.getDate())} ${h}:${padZero(now.getMinutes())}:${padZero(now.getSeconds())} ${ampm}`;
-    elements.clock.textContent = currentTime;
+    elements.querySelector('.clock').textContent = currentTime;
 }
 
 displayTime();

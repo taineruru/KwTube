@@ -181,7 +181,7 @@
 <div id="messages"></div>
 <script>
     // 要素の取得
-const elements = ['submit', 'msg', 'name', 'seed', 'form', 'filter', 'channel', 'darkmodeBtn', 'command', 'messageselect', 'colorPicker', 'colorCodeResult', 'copyButton', 'showSeed', 'clock']
+const elements = ['submit', 'msg', 'name', 'seed', 'form', 'filter', 'channel', 'darkmodeBtn', 'command', 'messageselect', 'colorPicker', 'colorCodeResult', 'copyButton', 'showSeed']
     .reduce((acc, id) => ({ ...acc, [id]: document.getElementById(id) }), {});
 const body = document.querySelector("body");
 
@@ -286,7 +286,7 @@ function displayTime() {
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const h = padZero(hours % 12 || 12);
     const currentTime = `${padZero(now.getMonth() + 1)}/${padZero(now.getDate())} ${h}:${padZero(now.getMinutes())}:${padZero(now.getSeconds())} ${ampm}`;
-    elements.querySelector('.clock').textContent = currentTime;
+    document.querySelector('.clock').textContent = currentTime;
 }
 
 displayTime();

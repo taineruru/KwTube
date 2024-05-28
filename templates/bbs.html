@@ -180,193 +180,118 @@
 
 <div id="messages"></div>
 <script>
-    let submitbtn = document.getElementById("submit");
-    let msg = document.getElementById("msg");
-    let nam = document.getElementById("name");
-    let seed = document.getElementById("seed");
-    let form = document.getElementById("form");
-    let element = document.getElementById("filter");
-    let channel = document.getElementById("channel");
-    let body = document.querySelector("body");
-    let darkmodeBtn = document.getElementById("darkmodeBtn");
-    let cmd = document.getElementById("command");
-    let msgs = document.getElementById("messageselect");
+    // 要素の取得
+const elements = ['submit', 'msg', 'name', 'seed', 'form', 'filter', 'channel', 'darkmodeBtn', 'command', 'messageselect', 'colorPicker', 'colorCodeResult', 'copyButton', 'showSeed', 'clock']
+    .reduce((acc, id) => ({ ...acc, [id]: document.getElementById(id) }), {});
+const body = document.querySelector("body");
 
-    nam.value = localStorage.getItem("name");
-    seed.value = localStorage.getItem("seed");
-    channel.value = localStorage.getItem("channel");
+// ローカルストレージから値を復元
+['name', 'seed', 'channel'].forEach(item => elements[item].value = localStorage.getItem(item) || '');
 
-    if (!localStorage.hasOwnProperty("dark")) {
-        localStorage.setItem("dark", 0);
-    }
-    dark = localStorage.getItem("dark");
+// ダークモードの初期設定
+let dark = localStorage.getItem("dark") || 0;
+if (dark == 1) body.classList.add("dark");
 
-    // メッセージ送信するやつ
-    function sendmsg() {
-        var send = new XMLHttpRequest();
-        send.open(
-            "GET",
-            `/bbs/result?name=${encodeURIComponent(nam.value)}&message=${encodeURIComponent(cmd.value)}${encodeURIComponent(msg.value)}${encodeURIComponent(msgs.value)}&seed=${encodeURIComponent(seed.value)}&channel=${channel.value}&verify=${element.value}`
-            , false
-        );
-        send.send().then(reloadmessages());
-    }
+// メッセージ送信
+function sendmsg() {
+    const params = new URLSearchParams({
+        name: elements.name.value,
+        message: `${elements.command.value}${elements.msg.value}${elements.messageselect.value}`,
+        seed: elements.seed.value,
+        channel: elements.channel.value,
+        verify: elements.filter.value
+    }).toString();
+    const send = new XMLHttpRequest();
+    send.open("GET", `/bbs/result?${params}`, false);
+    send.send().then(reloadmessages());
+}
 
-    form.addEventListener("submit", () => {
-        localStorage.setItem("name", nam.value);
-        localStorage.setItem("seed", seed.value);
-        localStorage.setItem("channel", channel.value);
-        console.log("clicked");
-        sendmsg();
+elements.form.addEventListener("submit", () => {
+    ['name', 'seed', 'channel'].forEach(item => localStorage.setItem(item, elements[item].value));
+    sendmsg();
+});
+
+// 自動リンク化
+function AutoLink(str) {
+    const currentUrl = window.location.origin.match(/https?:\/\/[^\/]+\.com/)[0];
+    const regexp_url = /((h?)(ttps?:\/\/[\w\.\/\?=&;#~\-]+[^<\/\s])(\s)*)/g;
+    const regexp_watch = /\/watch\?v=([A-Za-z0-9_-]+)/g;
+    const regexp_c = /\/channel\/([A-Za-z0-9_-]+)/g;
+    return str.replace(regexp_c, (_, cId) => `${currentUrl}/channel/${cId}`)
+            .replace(regexp_watch, (_, videoId) => `${currentUrl}/watch?v=${videoId}`)
+            .replace(regexp_url, (all, url, h, href) => `<a href="h${href}" target="_blank">${url}</a>`);
+}
+
+// メッセージを自動で読み込む
+function reloadmessages() {
+    const params = new URLSearchParams({
+        channel: elements.channel.value,
+        verify: elements.filter.checked,
+        t: Date.now()
+    }).toString();
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", `/bbs/api?${params}`);
+    xhr.onload = () => {
+        if (xhr.status == 200) document.getElementById("messages").innerHTML = AutoLink(xhr.responseText);
+    };
+    xhr.send();
+}
+
+reloadmessages();
+setTimeout(reloadmessages, 1000);
+setInterval(reloadmessages, 5000);
+
+// ダークモード切替
+elements.darkmodeBtn.addEventListener("click", () => {
+    dark = dark == 1 ? 0 : 1;
+    localStorage.setItem("dark", dark);
+    body.classList.toggle("dark");
+});
+
+// シードの表示/非表示
+elements.showSeed.addEventListener("change", () => {
+    elements.seed.type = elements.showSeed.checked ? "text" : "password";
+});
+
+// カラーコードの表示とコピー
+elements.colorPicker.addEventListener("input", () => elements.colorCodeResult.value = elements.colorPicker.value);
+elements.copyButton.addEventListener("click", () => {
+    elements.colorCodeResult.select();
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+    const messageElement = document.getElementById("message");
+    messageElement.textContent = `コピーしたカラーコード: ${elements.colorCodeResult.value}`;
+    messageElement.style.display = "block";
+    setTimeout(() => {
+        messageElement.textContent = "";
+        messageElement.style.display = "none";
+    }, 2000);
+});
+
+// メッセージの入力要件の設定
+const checkRequired = (elem, values, required) => {
+    elem.addEventListener('change', function () {
+        elements.msg.required = values.includes(this.value) ? '' : required;
     });
+};
 
-    // 自動リンク化
-    function AutoLink(str) {
-        const currentUrl = window.location.origin.match(/https?:\/\/[^\/]+\.com/)[0];
-        const regexp_url = /((h?)(ttps?:\/\/[\w\.\/\?=&;#~\-]+[^<\/\s])(\s)*)/g;
-        const regexp_watch = /\/watch\?v=([A-Za-z0-9_-]+)/g;
-        const regexp_c = /\/channel\/([A-Za-z0-9_-]+)/g;
+checkRequired(elements.messageselect, ['時報お疲れ様', 'じほおつ', 'ぬ', 't', '٩( ᐛ )و', '( ｣ﾟДﾟ)｣＜じほおつ〜！'], 'required');
+checkRequired(elements.command, ['/disself', '/restrict', '/release', '/revive'], 'required');
 
-        const replaceC = function (all, cId) {
-            return currentUrl + '/channel/' + cId;
-        };
+// 時計の表示
+function displayTime() {
+    const padZero = value => value.toString().padStart(2, '0');
+    const now = new Date();
+    const hours = now.getHours();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const h = padZero(hours % 12 || 12);
+    const currentTime = `${padZero(now.getMonth() + 1)}/${padZero(now.getDate())} ${h}:${padZero(now.getMinutes())}:${padZero(now.getSeconds())} ${ampm}`;
+    elements.clock.textContent = currentTime;
+}
 
-        const replaceWatch = function (all, videoId) {
-            return currentUrl + '/watch?v=' + videoId;
-        };
+displayTime();
+setInterval(displayTime, 1000);
 
-        const regexp_makeLink = function (all, url, h, href) {
-            return '<a href="h' + href + '" target="_blank">' + url + "</a>";
-        };
-
-        str = str.replace(regexp_c, replaceC);
-        str = str.replace(regexp_watch, replaceWatch);
-        return str.replace(regexp_url, regexp_makeLink);
-    }
-
-    // メッセージを自動で読み込むやつ
-    function reloadmessages() {
-        var xhr = new XMLHttpRequest();
-        xhr.open(
-            "GET",
-            "/bbs/api?channel=" +
-            channel.value +
-            "&verify=" +
-            element.checked +
-            "&t=" +
-            Date.now()
-        );
-        xhr.onload = function () {
-            if (xhr.status == 200) {
-                document.getElementById("messages").innerHTML = AutoLink(
-                    xhr.responseText
-                );
-            }
-        };
-        xhr.send();
-    }
-
-    reloadmessages();
-    setTimeout(reloadmessages, 1000);
-    setInterval(reloadmessages, 5000);
-
-    // ダークモードのやつ
-    darkmodeBtn.addEventListener("click", () => {
-        if (dark == 1) {
-            localStorage.setItem("dark", 0);
-            dark = 0;
-        } else {
-            localStorage.setItem("dark", 1);
-            dark = 1;
-        }
-        body.classList.toggle("dark");
-    });
-
-    if (dark == 1) {
-        body.classList.toggle("dark");
-    }
-
-    // 表示、非表示のやつ(チェックボックス式)
-    function toggleSeedVisibility() {
-        let SeedInput = document.getElementById("seed");
-        let showSeedCheckbox = document.getElementById("showSeed");
-        if (showSeedCheckbox.checked) {
-            SeedInput.type = "text";
-        } else {
-            SeedInput.type = "password";
-        }
-    }
-
-    // カラーコードを表示するやつ
-    document.getElementById("colorPicker").addEventListener("input", function () {
-        var colorCodeResult = this.value;
-        document.getElementById("colorCodeResult").value = colorCodeResult;
-    });
-
-    document.getElementById("copyButton").addEventListener("click", function () {
-        var textBox = document.getElementById("colorCodeResult");
-        // テキストボックスの内容を選択してコピー
-        textBox.select();
-        document.execCommand("copy");
-        // 選択を解除
-        window.getSelection().removeAllRanges();
-        // コピーした旨のメッセージを表示
-        messageElement.textContent = "コピーしたカラーコード: " + textBox.value;
-        messageElement.style.display = "block"; // メッセージを表示
-        // 2秒後にメッセージを消す
-        setTimeout(function () {
-            messageElement.textContent = "";
-            messageElement.style.display = "none"; // メッセージを非表示
-        }, 2000);
-    });
-
-    document.getElementById('messageselect').addEventListener('change', function () {
-        var textbox = document.getElementById('msg');
-        var tv = this.value;
-        if (tv === '時報お疲れ様' ||
-            tv === 'じほおつ' ||
-            tv === 'ぬ' ||
-            tv === 't' ||
-            tv === '٩( ᐛ )و' ||
-            tv === '( ｣ﾟДﾟ)｣＜じほおつ〜！') {
-            textbox.removeAttribute('required');
-        } else {
-            textbox.setAttribute('required', 'required');
-        }
-    });
-
-    document.getElementById('command').addEventListener('change', function () {
-        var textbox = document.getElementById('msg');
-        if (this.value === '/disself' ||
-            this.value === '/restrict' ||
-            this.value === '/release' ||
-            this.value === '/revive') {
-            textbox.removeAttribute('required');
-        } else {
-            textbox.setAttribute('required', 'required');
-        }
-    });
-
-    function displayTime() {
-        const padZero = value => value.toString().padStart(2, '0');
-        const now = new Date();
-        const month = padZero(now.getMonth() + 1);
-        const day = padZero(now.getDate());
-        let hours = now.getHours();
-        const minutes = padZero(now.getMinutes());
-        const seconds = padZero(now.getSeconds());
-
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-
-        const h = padZero(hours);
-        const currentTime = `${month}\/${day} ${h}:${minutes}:${seconds} ${ampm}`;
-        document.querySelector('.clock').textContent = currentTime;
-    }
-
-    displayTime();
-    setInterval(displayTime, 1000);
 </script>
 </body>
 </html>

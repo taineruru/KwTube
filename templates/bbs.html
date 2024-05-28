@@ -180,13 +180,14 @@
 
 <div id="messages"></div>
 <script>
-    // 要素の取得
-const elements = ['submit', 'msg', 'name', 'seed', 'form', 'filter', 'channel', 'darkmodeBtn', 'command', 'messageselect', 'colorPicker', 'colorCodeResult', 'copyButton', 'showSeed']
+// 要素の取得
+const elements = ['submit', 'msg', 'name', 'seed', 'form', 'channel', 'darkmodeBtn', 'command', 'messageselect', 'colorPicker', 'colorCodeResult', 'copyButton', 'showSeed', 'filter'] // filterを追加
     .reduce((acc, id) => ({ ...acc, [id]: document.getElementById(id) }), {});
 const body = document.querySelector("body");
 
 // ローカルストレージから値を復元
-['name', 'seed', 'channel'].forEach(item => elements[item].value = localStorage.getItem(item) || '');
+['name', 'seed', 'channel', 'filter'].forEach(item => elements[item].value = localStorage.getItem(item) || '');
+elements.filter.checked = localStorage.getItem('filterChecked') === 'true'; // チェックボックスの状態を復元
 
 // ダークモードの初期設定
 let dark = localStorage.getItem("dark") || 0;
@@ -208,7 +209,13 @@ function sendmsg() {
 
 elements.form.addEventListener("submit", () => {
     ['name', 'seed', 'channel'].forEach(item => localStorage.setItem(item, elements[item].value));
+    localStorage.setItem('filterChecked', elements.filter.checked); // チェックボックスの状態を保存
     sendmsg();
+});
+
+// フィルターチェックボックスの状態を保存
+elements.filter.addEventListener('change', () => {
+    localStorage.setItem('filterChecked', elements.filter.checked);
 });
 
 // 自動リンク化

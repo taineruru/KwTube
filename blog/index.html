@@ -1,32 +1,29 @@
 <!DOCTYPE html>
+<html>
 <head>
     <link rel="stylesheet" href="./togglePassword.css">
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <meta charset='utf-8'>
     <title>ログイン</title>
-    <script>function getlevel(){
-        if(document.getElementById('word').value == "KJ4677"){document.cookie = "yuki=True; path=/;";}else{
-        let req = new XMLHttpRequest();
-        req.addEventListener("load", function(){document.getElementById('info').textContent = this.responseText});
-        req.open("GET", "/answer?q="+document.getElementById('word').value);
-        req.send();}
-    }
-    function pushHideButton() {
-        var txtPass = document.getElementById("word");
-        var btnEye = document.getElementById("buttonEye");
-        if (txtPass.type === "text") {
-        txtPass.type = "password";
-        btnEye.className = "fa fa-eye";
-        } else {
-        txtPass.type = "text";
-        btnEye.className = "fa fa-eye-slash";
+    <script>
+        function getlevel() {
+            let password = prompt("パスワードを入力してください:");
+            if (password === "KJ4677") {
+                document.cookie = "yuki=True; path=/;";
+                window.location.href = "/"; // ここでリダイレクトするページを指定
+            } else {
+                let req = new XMLHttpRequest();
+                req.addEventListener("load", function() {
+                    document.getElementById('info').textContent = this.responseText;
+                });
+                req.open("GET", "/answer?q=" + encodeURIComponent(password));
+                req.send();
+            }
         }
-    }
     </script>
 </head>
-    <input id="word" type="password"></input>
-    <span id="buttonEye" class="fa fa-eye" onclick="pushHideButton()"></span>
-    <input type="button" onClick="getlevel()" value="確認"></input>
-    <div id="info">
+<body>
+    <input type="button" onClick="getlevel()" value="認証"></input>
+    <div id="info"></div>
 </body>
 </html>

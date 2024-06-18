@@ -117,10 +117,28 @@
             <option value="" selected>メッセージセレクタ</option>
             <option value="t">t</option>
             <option value="ぬ">ぬ</option>
-            <option value="٩( ᐛ )و">٩( ᐛ )و</option>
             <option value="時報お疲れ様">時報お疲れ様</option>
             <option value="じほおつ">じほおつ</option>
+        </select>
+        <label for="message"></label>
+        <select name="kaomojiselect" id="kaomojiselect">
+            <option value="" selected>顔文字セレクタ</option>
+            <option value="(´・ω・｀)">(´・ω・｀)</option>
             <option value="( ｣ﾟДﾟ)｣＜じほおつ〜！">( ｣ﾟДﾟ)｣＜じほおつ〜！</option>
+            <option value="٩( ᐛ )و">٩( ᐛ )و</option>
+            <option value="(・▽・)">(・▽・)</option>
+            <option value="^^">^^</option>
+            <option value="＾＾">＾＾</option>
+            <option value="^Ξ^">^Ξ^</option>
+            <option value="（ ＾ω＾）">（ ＾ω＾）</option>
+            <option value="（ ＾ω＾）おっ">（ ＾ω＾）おっ</option>
+            <option value="（＾ω＾ Ξ ＾ω＾）">（＾ω＾ Ξ ＾ω＾）</option>
+            <option value="(((((((((((っ･ω･)っ ﾌﾞｰﾝ">(((((((((((っ･ω･)っ ﾌﾞｰﾝ</option>
+            <option value=" ^^) _旦~~"> ^^) _旦~~</option>
+            <option value="(つ∀-)ｵﾔｽﾐｰ">(つ∀-)ｵﾔｽﾐｰ</option>
+            <option value="( ˘ω˘)ｽﾔｧ">( ˘ω˘)ｽﾔｧ</option>
+            <option value="(¦3[▓▓]">(¦3[▓▓]</option>
+            <option value="(:3[▓▓]">(:3[▓▓]</option>
         </select>
         <label for="message"></label>
         <select name="command" id="command">
@@ -181,7 +199,21 @@
 <div id="messages"></div>
 <script>
 // 要素の取得
-const elements = ['submit', 'msg', 'name', 'seed', 'form', 'channel', 'darkmodeBtn', 'command', 'messageselect', 'colorPicker', 'colorCodeResult', 'copyButton', 'showSeed', 'filter'] // filterを追加
+const elements = ['submit', 
+'msg', 
+'name', 
+'seed', 
+'form', 
+'channel', 
+'darkmodeBtn', 
+'command', 
+'messageselect', 
+'colorPicker', 
+'colorCodeResult', 
+'copyButton', 
+'showSeed', 
+'filter', 
+'kaomojiselect']
     .reduce((acc, id) => ({ ...acc, [id]: document.getElementById(id) }), {});
 const body = document.querySelector("body");
 
@@ -197,7 +229,7 @@ if (dark == 1) body.classList.add("dark");
 function sendmsg() {
     const params = new URLSearchParams({
         name: elements.name.value,
-        message: `${elements.command.value}${elements.msg.value}${elements.messageselect.value}`,
+        message: `${elements.command.value}${elements.kaomojiselect.value}${elements.msg.value}${elements.messageselect.value}`,
         seed: elements.seed.value,
         channel: elements.channel.value,
         verify: elements.filter.value
@@ -282,7 +314,25 @@ const checkRequired = (elem, values, required) => {
     });
 };
 
-checkRequired(elements.messageselect, ['時報お疲れ様', 'じほおつ', 'ぬ', 't', '٩( ᐛ )و', '( ｣ﾟДﾟ)｣＜じほおつ〜！'], 'required');
+checkRequired(elements.kaomojiselect,[
+'(´・ω・｀)',
+'＾＾',
+'(・▽・)',
+'^^',
+'^Ξ^',
+'（ ＾ω＾）',
+'（ ＾ω＾）おっ',
+'（＾ω＾ Ξ ＾ω＾）',
+'٩( ᐛ )و', 
+'( ｣ﾟДﾟ)｣＜じほおつ〜！',
+'(((((((((((っ･ω･)っ ﾌﾞｰﾝ',
+' ^^) _旦~~',
+'(つ∀-)ｵﾔｽﾐｰ',
+'( ˘ω˘)ｽﾔｧ',
+'(¦3[▓▓]',
+'(:3[▓▓]'
+], 'required');
+checkRequired(elements.messageselect, ['時報お疲れ様', 'じほおつ', 'ぬ', 't'], 'required');
 checkRequired(elements.command, ['/disself', '/restrict', '/release', '/revive'], 'required');
 
 // 時計の表示

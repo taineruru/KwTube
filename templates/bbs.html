@@ -11,7 +11,67 @@
                 document.cookie = 'i=' + result.visitorId + "; path=/;";
             })
     </script>
+    <!--window-->
+    <style>
+        body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
 
+.window {
+  width: 500px;
+  height: 500px;
+  background-color: #707070;
+  border: 1px solid #3f3f3f;
+  position: absolute;
+  top: 75px;
+  left: 75px;
+  cursor: move;
+  overflow: hidden;
+}
+
+.window-header {
+  background-color: #3f3f3f;
+  padding: 5px;
+  cursor: move;
+}
+
+.window-content {
+padding: 10px;
+height: calc(100% - 30px);
+}
+
+
+.resize-handle {
+  width: 15px;
+  height: 15px;
+  background-color: #474747;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  cursor: nwse-resize;
+}
+
+.close-button {
+  background-color: #3f3f3f;
+  border: none;
+  padding: 5px 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+iframe {
+width: 100%;
+height: 100%;
+border: none;
+}
+
+  
+  </style>
+<!--BBS-->
     <style>
         #copyresult {
             display: none;
@@ -84,6 +144,235 @@
     </style>
 </head>
 <body>
+    <!--window-->
+    <select id="windowSelect">
+        <option value="appWindow1">window1</option>
+        <option value="appWindow2">window2</option>
+      </select>
+      <input type="checkbox" id="resetSizeCheckbox"> サイズ
+      <input type="checkbox" id="resetPositionCheckbox"> 位置
+      <button onclick="resetWindow()">リセット</button>
+  
+  
+      
+      <div class="window" id="appWindow1">
+        <div class="window-header" id="dragHandle1">window1</div>
+        <button class="close-button" onclick="closeWindow('appWindow1')">Close</button>
+        <div class="resize-handle" id="resizeHandle1"></div>
+        <div class="window-content">
+          そのうち何か追加します((((
+        </div>
+      </div>
+      
+      <div class="window" id="appWindow2">
+        <div class="window-header" id="dragHandle2">window2</div>
+        <button class="close-button" onclick="closeWindow('appWindow2')">Close</button>
+        <div class="resize-handle" id="resizeHandle2"></div>
+        <div class="window-content">
+            そのうち何か追加します((((
+        </div>
+      </div>
+      
+      <button onclick="showWindow('appWindow1')">window1</button>
+      <button onclick="showWindow('appWindow2')">window2</button>
+      <script>
+      function resetSelectedWindowSize() {
+        var selectedWindowId = document.getElementById('windowSelect').value;
+        resetWindowSize(selectedWindowId);
+      }
+      
+      function resetWindow() {
+    var resetSize = document.getElementById('resetSizeCheckbox').checked;
+    var resetPosition = document.getElementById('resetPositionCheckbox').checked;
+  
+    if (resetSize) {
+      resetWindowSize();
+    }
+  
+    if (resetPosition) {
+      resetWindowPosition();
+    }
+  }
+  
+  function resetWindowSize() {
+    var selectedWindowId = document.getElementById('windowSelect').value;
+    var windowElement = document.getElementById(selectedWindowId);
+    windowElement.style.width = '500px';
+    windowElement.style.height = '500px';
+    saveWindowState(selectedWindowId);
+  }
+  
+  function resetWindowPosition() {
+    var selectedWindowId = document.getElementById('windowSelect').value;
+    var windowElement = document.getElementById(selectedWindowId);
+    windowElement.style.top = '10px';
+    windowElement.style.left = '675px';
+    saveWindowState(selectedWindowId);
+  }
+  
+      
+      function saveWindowState(windowId) {
+        var windowElement = document.getElementById(windowId);
+        localStorage.setItem(windowId, JSON.stringify({
+          top: windowElement.style.top,
+          left: windowElement.style.left,
+          width: windowElement.style.width,
+          height: windowElement.style.height,
+          display: windowElement.style.display
+        }));
+      }
+      
+      function restoreWindowState(windowId) {
+        var windowElement = document.getElementById(windowId);
+        var savedState = localStorage.getItem(windowId);
+        if (savedState) {
+          var state = JSON.parse(savedState);
+          windowElement.style.top = state.top;
+          windowElement.style.left = state.left;
+          windowElement.style.width = state.width;
+          windowElement.style.height = state.height;
+          windowElement.style.display = state.display;
+        }
+      }
+      
+      function closeWindow(windowId) {
+        var windowElement = document.getElementById(windowId);
+        windowElement.style.display = "none";
+        saveWindowState(windowId);
+      }
+      
+      function showWindow(windowId) {
+        var windowElement = document.getElementById(windowId);
+        windowElement.style.display = "block";
+        saveWindowState(windowId);
+      }
+      
+      // 初期化
+      dragElement(document.getElementById("appWindow1"), "dragHandle1");
+      resizeElement(document.getElementById("appWindow1"), "resizeHandle1");
+      dragElement(document.getElementById("appWindow2"), "dragHandle2");
+      resizeElement(document.getElementById("appWindow2"), "resizeHandle2");
+      
+      // ページが読み込まれたときにウィンドウの状態を復元
+      restoreWindowState("appWindow1");
+      restoreWindowState("appWindow2");
+      
+      function dragElement(elmnt, handle) {
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        document.getElementById(handle).onmousedown = dragMouseDown;
+      
+        function dragMouseDown(e) {
+          e = e || window.event;
+          e.preventDefault();
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          document.onmouseup = closeDragElement;
+          document.onmousemove = elementDrag;
+        }
+      
+        function elementDrag(e) {
+          e = e || window.event;
+          e.preventDefault();
+          pos1 = pos3 - e.clientX;
+          pos2 = pos4 - e.clientY;
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+          elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+          saveWindowState(elmnt.id);
+        }
+      
+        function closeDragElement() {
+          document.onmouseup = null;
+          document.onmousemove = null;
+        }
+      }
+      
+      function resizeElement(elmnt, handle) {
+        document.getElementById(handle).onmousedown = resizeMouseDown;
+      
+        function resizeMouseDown(e) {
+          e.preventDefault();
+          document.onmouseup = closeResizeElement;
+          document.onmousemove = elementResize;
+        }
+      
+        function elementResize(e) {
+          e.preventDefault();
+          elmnt.style.width = e.clientX - elmnt.offsetLeft + "px";
+          elmnt.style.height = e.clientY - elmnt.offsetTop + "px";
+          saveWindowState(elmnt.id);
+        }
+      
+        function closeResizeElement() {
+          document.onmouseup = null;
+          document.onmousemove = null;
+        }
+      }
+  </script>
+  <script>
+      function dragElementTouch(elmnt) {
+    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    elmnt.addEventListener("touchstart", dragTouchStart, false);
+  
+    function dragTouchStart(e) {
+      var touch = e.touches[0];
+      pos3 = touch.clientX;
+      pos4 = touch.clientY;
+      document.addEventListener("touchend", closeDragElement, false);
+      document.addEventListener("touchmove", elementDrag, false);
+    }
+  
+    function elementDrag(e) {
+      e.preventDefault();
+      var touch = e.touches[0];
+      pos1 = pos3 - touch.clientX;
+      pos2 = pos4 - touch.clientY;
+      pos3 = touch.clientX;
+      pos4 = touch.clientY;
+      elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+      elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+      saveWindowState(elmnt.id);
+    }
+  
+    function closeDragElement() {
+      document.removeEventListener("touchend", closeDragElement);
+      document.removeEventListener("touchmove", elementDrag);
+    }
+  }
+  
+  function resizeElementTouch(elmnt) {
+    var resizeHandle = elmnt.querySelector(".resize-handle");
+    resizeHandle.addEventListener("touchstart", resizeTouchStart, false);
+  
+    function resizeTouchStart(e) {
+      e.preventDefault();
+      var touch = e.touches[0];
+      document.addEventListener("touchend", closeResizeElement, false);
+      document.addEventListener("touchmove", elementResize, false);
+    }
+  
+    function elementResize(e) {
+      e.preventDefault();
+      var touch = e.touches[0];
+      elmnt.style.width = touch.clientX - elmnt.offsetLeft + "px";
+      elmnt.style.height = touch.clientY - elmnt.offsetTop + "px";
+      saveWindowState(elmnt.id);
+    }
+  
+    function closeResizeElement() {
+      document.removeEventListener("touchend", closeResizeElement);
+      document.removeEventListener("touchmove", elementResize);
+    }
+  }
+  
+  // タッチイベントを使用してウィンドウのドラッグとサイズ変更を有効化
+  dragElementTouch(document.getElementById("appWindow1"));
+  resizeElementTouch(document.getElementById("appWindow1"));
+  dragElementTouch(document.getElementById("appWindow2"));
+  resizeElementTouch(document.getElementById("appWindow2"));
+    </script>
+    <!--BBS-->
 <div class="clock"></div>
 <button id="darkmodeBtn">Light/Dark</button>
 <input type="color" id="colorPicker" value="#ffffff">

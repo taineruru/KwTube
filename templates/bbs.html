@@ -3,13 +3,62 @@
 <head>
     <title>Ex</title>
     <script>
-        const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
-            .then(FingerprintJS => FingerprintJS.load())
-        fpPromise
-            .then(fp => fp.get())
-            .then(result => {
-                document.cookie = 'i=' + result.visitorId + "; path=/;";
-            })
+  const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
+    .then(FingerprintJS => FingerprintJS.load())
+  fpPromise
+    .then(fp => fp.get())
+    .then(result => {
+      document.cookie = 'i='+result.visitorId+"; path=/;";
+    })
+  function getRandomString(length) {
+    let randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+    }
+    return result;
+}
+
+function setCookie(name, value, days) {
+    let expires = '';
+    if (days) {
+        let date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = '; expires=' + date.toUTCString();
+    }
+    document.cookie = name + '=' + (value || '') + expires + '; path=/';
+}
+
+function getCookie(name) {
+    let nameEQ = name + '=';
+    let cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i];
+        while (cookie.charAt(0) === ' ') {
+            cookie = cookie.substring(1, cookie.length);
+        }
+        if (cookie.indexOf(nameEQ) === 0) {
+            return cookie.substring(nameEQ.length, cookie.length);
+        }
+    }
+    return null;
+}
+
+function assignRandomCookie() {
+    let cookieName = 'p';
+    let existingValue = getCookie(cookieName);
+    
+    if (!existingValue) {
+        let randomValue = getRandomString(10);
+        setCookie(cookieName, randomValue, 30); // 30 days expiration
+        console.log('Assigned new cookie value:', randomValue);
+    } else {
+        console.log('Existing cookie value found:', existingValue);
+    }
+}
+
+// Call the function when the page loads
+assignRandomCookie();
     </script>
     <!--window-->
     <style>

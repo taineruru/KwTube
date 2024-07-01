@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: B95_ex
+    name: kwsee
     env: python
     region: Oregon
     plan: free
